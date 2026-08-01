@@ -5,399 +5,339 @@ import android.hardware.ConsumerIrManager
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.FilterChip
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
+/** 应用入口；Compose 只负责四级列表页面和交互状态。 */
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContent { MaterialTheme { GreeRemoteScreen() } }
+        setContent { MaterialTheme { UniversalRemoteApp() } }
     }
 }
 
+/** 四级页面的当前位置。 */
+private enum class Page { DEVICES, BRANDS, REMOTES, CONTROLS }
+
+/** 后台加载结果，避免在主线程读取和解密 assets。 */
+private sealed interface LoadState<out T> {
+    data object Loading : LoadState<Nothing>
+    data class Ready<T>(val value: T) : LoadState<T>
+    data class Failed(val error: Throwable) : LoadState<Nothing>
+}
+
+/** 组织设备、品牌、型号和遥控器四级页面。 */
 @Composable
-@OptIn(ExperimentalLayoutApi::class)
-private fun GreeRemoteScreen() {
+private fun UniversalRemoteApp() {
     val context = LocalContext.current
-    val profilesResult = remember { runCatching { RemoteCatalog.loadAll(context) } }
-    val profiles = profilesResult.getOrDefault(emptyList())
-    val irManager = remember { context.getSystemService(Context.CONSUMER_IR_SERVICE) as? ConsumerIrManager }
-    var profileIndex by remember { mutableIntStateOf(0) }
-    var profileMenuExpanded by remember { mutableStateOf(false) }
-    val profile = profiles.getOrNull(profileIndex)
-    val fallbackState = remember {
-        AcRemoteState(
-            false, 26, AcProtocolConventions.MODES[0],
-            AcProtocolConventions.FAN_SPEEDS[0], 0, emptyMap(),
+    val catalog = remember { RemoteCatalog(context) }
+    val irManager = remember {
+        context.getSystemService(Context.CONSUMER_IR_SERVICE) as? ConsumerIrManager
+    }
+    val transmitter = remember(irManager) { FixedIrTransmitter(irManager) }
+    var page by remember { mutableStateOf(Page.DEVICES) }
+    var device by remember { mutableStateOf<DeviceDefinition?>(null) }
+    var brand by remember { mutableStateOf<BrandDefinition?>(null) }
+    var remote by remember { mutableStateOf<RemoteSummary?>(null) }
+
+    fun goBack() {
+        when (page) {
+            Page.DEVICES -> Unit
+            Page.BRANDS -> {
+                device = null
+                page = Page.DEVICES
+            }
+            Page.REMOTES -> {
+                brand = null
+                page = Page.BRANDS
+            }
+            Page.CONTROLS -> {
+                remote = null
+                page = Page.REMOTES
+            }
+        }
+    }
+
+    BackHandler(enabled = page != Page.DEVICES) { goBack() }
+    when (page) {
+        Page.DEVICES -> DeviceListPage(catalog) {
+            device = it
+            page = Page.BRANDS
+        }
+        Page.BRANDS -> BrandListPage(catalog, device!!, ::goBack) {
+            brand = it
+            page = Page.REMOTES
+        }
+        Page.REMOTES -> RemoteListPage(catalog, device!!, brand!!, ::goBack) {
+            remote = it
+            page = Page.CONTROLS
+        }
+        Page.CONTROLS -> ControlListPage(
+            catalog, device!!, brand!!, remote!!, transmitter, ::goBack,
         )
     }
-    var state by remember(profile?.getId()) { mutableStateOf(profile?.createInitialState() ?: fallbackState) }
-    var functionId by remember(profile?.getId()) { mutableIntStateOf(AcProtocolConventions.FUNCTION_POWER) }
-    var lastStatus by remember { mutableStateOf("等待发送") }
-    val hasIrEmitter = irManager?.hasIrEmitter() == true
-    val canTransmit = hasIrEmitter && profile?.isSendable() == true
-    val deviceBadge = when {
-        !hasIrEmitter -> "无红外发射器"
-        profile?.isSendable() != true -> "配置不可发送"
-        else -> "红外就绪"
-    }
-    val temperatures = profile?.getSupportedTemperatures(state.getMode()).orEmpty()
-    val fans = profile?.getSupportedFanSpeeds(state.getMode()).orEmpty()
+}
 
-    Scaffold(modifier = Modifier.fillMaxSize()) { padding ->
-        Column(
-            modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.surface)
-                .verticalScroll(rememberScrollState()).padding(padding)
-                .padding(horizontal = 20.dp, vertical = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Column {
-                    Text("格力空调", fontSize = 28.sp, fontWeight = FontWeight.Bold)
-                    Text(
-                        profile?.let { "${it.getAssetName()} · ${it.getId()} · ${it.getEngineLabel()}" }
-                            ?: profilesResult.exceptionOrNull()?.let { "码库读取失败：${it.message}" }
-                            ?: "没有找到空调配置",
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
-                }
-                Surface(
-                    shape = RoundedCornerShape(50),
-                    color = if (canTransmit) Color(0xFFE4F7EA) else MaterialTheme.colorScheme.errorContainer,
-                ) {
-                    Text(
-                        deviceBadge,
-                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 7.dp),
-                        color = if (canTransmit) Color(0xFF176B35) else MaterialTheme.colorScheme.onErrorContainer,
-                        fontSize = 13.sp,
-                    )
-                }
-            }
-
-            Section("空调配置（${profiles.size}）") {
-                Column {
-                    OutlinedButton(
-                        onClick = { profileMenuExpanded = true },
-                        modifier = Modifier.fillMaxWidth(),
-                    ) {
-                        Text(profile?.let { "${profileIndex + 1}/${profiles.size}  ${it.getId()} · 格式 ${it.getFormatId()}" } ?: "选择配置")
-                    }
-                    DropdownMenu(
-                        expanded = profileMenuExpanded,
-                        onDismissRequest = { profileMenuExpanded = false },
-                    ) {
-                        profiles.forEachIndexed { index, item ->
-                            DropdownMenuItem(
-                                text = {
-                                    Column {
-                                        Text("${index + 1}. ${item.getId()} · 格式 ${item.getFormatId()}")
-                                        Text(
-                                            "品牌 ${item.getBrand()} · ${item.getEngineLabel()}",
-                                            fontSize = 12.sp,
-                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                        )
-                                    }
-                                },
-                                onClick = {
-                                    profileIndex = index
-                                    profileMenuExpanded = false
-                                    lastStatus = "已切换 ${item.getId()}"
-                                },
-                            )
-                        }
-                    }
-                    Text(
-                        "新增其他品牌时，将同结构 JSON 放入 assets 即会自动加入列表。",
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        fontSize = 12.sp,
-                    )
-                }
-            }
-
-            Card(
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
-                shape = RoundedCornerShape(28.dp),
-            ) {
-                Column(
-                    modifier = Modifier.fillMaxWidth().padding(24.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    Text(if (state.getPower()) state.getMode().getLabel() else "已关机")
-                    Text(
-                        if (temperatures.isEmpty()) "--" else "${state.getTemperature()}°",
-                        fontSize = 68.sp,
-                        lineHeight = 76.sp,
-                        fontWeight = FontWeight.Light,
-                    )
-                    Text(
-                        "${state.getFanSpeed().getLabel()}风 · 风向 ${state.getUdWindMode()}",
-                        color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.75f),
-                    )
-                }
-            }
-
-            if (temperatures.isNotEmpty()) Section("温度") {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    OutlinedButton(
-                        onClick = {
-                            val index = temperatures.indexOf(state.getTemperature()).coerceAtLeast(0)
-                            state = state.withTemperature(temperatures[(index - 1).coerceAtLeast(0)])
-                            functionId = AcProtocolConventions.FUNCTION_TEMPERATURE_DOWN
-                        },
-                        modifier = Modifier.size(64.dp), shape = CircleShape,
-                    ) { Text("−", fontSize = 28.sp) }
-                    Text("${state.getTemperature()} ℃", fontSize = 28.sp, fontWeight = FontWeight.Medium)
-                    OutlinedButton(
-                        onClick = {
-                            val index = temperatures.indexOf(state.getTemperature()).coerceAtLeast(0)
-                            state = state.withTemperature(temperatures[(index + 1).coerceAtMost(temperatures.lastIndex)])
-                            functionId = AcProtocolConventions.FUNCTION_TEMPERATURE_UP
-                        },
-                        modifier = Modifier.size(64.dp), shape = CircleShape,
-                    ) { Text("+", fontSize = 26.sp) }
-                }
-            }
-
-            Section("模式") {
-                FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    profile?.getSupportedModes()?.forEach { mode ->
-                        FilterChip(
-                            selected = state.getMode() == mode,
-                            onClick = {
-                                val nextTemps = profile.getSupportedTemperatures(mode)
-                                val nextFans = profile.getSupportedFanSpeeds(mode)
-                                state = state.withMode(
-                                    mode,
-                                    state.getTemperature().takeIf { it in nextTemps } ?: nextTemps.firstOrNull() ?: state.getTemperature(),
-                                    state.getFanSpeed().takeIf { it in nextFans } ?: nextFans.firstOrNull() ?: state.getFanSpeed(),
-                                )
-                                functionId = AcProtocolConventions.FUNCTION_MODE
-                            },
-                            label = { Text(mode.getLabel()) },
-                        )
-                    }
-                }
-            }
-
-            if (fans.isNotEmpty()) Section("风速") {
-                FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    fans.forEach { fan ->
-                        FilterChip(
-                            selected = state.getFanSpeed() == fan,
-                            onClick = {
-                                state = state.withFanSpeed(fan)
-                                functionId = AcProtocolConventions.FUNCTION_FAN_SPEED
-                            },
-                            label = { Text(fan.getLabel()) },
-                        )
-                    }
-                }
-            }
-
-            profile?.getUdWindModes()?.takeIf { it.isNotEmpty() }?.let { windModes ->
-                Section("上下风向") {
-                    FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        windModes.forEach { value ->
-                            FilterChip(
-                                selected = state.getUdWindMode() == value,
-                                onClick = {
-                                    state = state.withUdWindMode(value)
-                                    functionId = if (value == 0) AcProtocolConventions.FUNCTION_UD_SWING
-                                    else AcProtocolConventions.FUNCTION_UD_FIX
-                                },
-                                label = { Text(if (value == 0) "扫风" else "档位 $value") },
-                            )
-                        }
-                    }
-                }
-            }
-
-            profile?.getExtraFunctions()?.takeIf { it.isNotEmpty() }?.let { functions ->
-                Section("JSON 扩展功能") {
-                    functions.forEach { function ->
-                        val spec = profile.getFunctionSpecs()[function.getFid()]
-                        val states = spec?.getStates().orEmpty().ifEmpty { listOf(0, 1) }
-                        val current = state.getExtraStates()[function.getFid()] ?: spec?.getDefaultState() ?: 0
-                        val enabledForMode = spec?.getModes()?.isEmpty() != false || state.getMode().getModeLetter() in spec.getModes()
-                        DynamicFunctionRow(
-                            label = function.getDisplayName(),
-                            states = states,
-                            current = current,
-                            enabled = enabledForMode,
-                            onChange = { value ->
-                                state = state.withExtraState(function.getFid(), value)
-                                functionId = function.getFid()
-                            },
-                        )
-                    }
-                }
-            }
-
-            if (profile != null && !profile.isSendable()) {
-                Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.errorContainer)) {
-                    Text(
-                        "该项是 type=1 旧式固定码，JSON 中没有 1002/300–302，能够自由选择，但无法由 JSON/LuaJ 解码发送。",
-                        modifier = Modifier.padding(16.dp),
-                        color = MaterialTheme.colorScheme.onErrorContainer,
-                    )
-                }
-            }
-
-            Button(
-                onClick = {
-                    val next = state.withPower(!state.getPower())
-                    runCatching {
-                        IrTransmitter.transmit(irManager, profile!!, next, AcProtocolConventions.FUNCTION_POWER)
-                    }.onSuccess {
-                        state = next
-                        lastStatus = if (next.getPower()) "已发送开机" else "已发送关机"
-                    }.onFailure { showTransmitError(context, it) }
-                },
-                modifier = Modifier.fillMaxWidth().height(58.dp),
-                enabled = canTransmit,
-                shape = RoundedCornerShape(18.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = if (state.getPower()) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
-                ),
-            ) { Text(if (state.getPower()) "关机" else "开机", fontSize = 18.sp) }
-
-            OutlinedButton(
-                onClick = {
-                    val next = state.withPower(true)
-                    runCatching { IrTransmitter.transmit(irManager, profile!!, next, functionId) }
-                        .onSuccess {
-                            state = next
-                            lastStatus = "已发送 ${profile?.getId()} · functionId=$functionId"
-                        }
-                        .onFailure { showTransmitError(context, it) }
-                },
-                modifier = Modifier.fillMaxWidth().height(54.dp),
-                enabled = canTransmit,
-                shape = RoundedCornerShape(18.dp),
-            ) { Text("发送当前 JSON/Lua 状态") }
-
-            Text(
-                lastStatus,
-                modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.Center,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                fontSize = 13.sp,
+/** 一级设备类型列表。 */
+@Composable
+private fun DeviceListPage(catalog: RemoteCatalog, onSelect: (DeviceDefinition) -> Unit) {
+    val state = load("devices") { catalog.loadDevices() }
+    ListPage(title = "选择设备类型", onBack = null, state = state) { devices ->
+        if (devices.isEmpty()) item(key = "empty_devices") {
+            ListItem(
+                headlineContent = { Text("没有设备类型") },
+                supportingContent = { Text("devices.json 未提供设备") },
             )
-            Spacer(Modifier.height(8.dp))
+        }
+        items(devices, key = { it.deviceId }) { device ->
+            ListItem(
+                headlineContent = { Text(device.name, fontWeight = FontWeight.Medium) },
+                supportingContent = { Text("device=${device.deviceId}") },
+                trailingContent = { Text("选择") },
+                modifier = Modifier.clickable { onSelect(device) },
+            )
+            HorizontalDivider()
         }
     }
 }
 
+/** 二级设备品牌列表。 */
 @Composable
-private fun DynamicFunctionRow(
-    label: String,
-    states: List<Int>,
-    current: Int,
-    enabled: Boolean,
-    onChange: (Int) -> Unit,
+private fun BrandListPage(
+    catalog: RemoteCatalog,
+    device: DeviceDefinition,
+    onBack: () -> Unit,
+    onSelect: (BrandDefinition) -> Unit,
 ) {
-    if (states.size == 2 && states.containsAll(listOf(0, 1))) {
-        ToggleRow(label, current == 1, enabled) { onChange(if (it) 1 else 0) }
-    } else {
-        val index = states.indexOf(current).coerceAtLeast(0)
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Text(label, color = if (enabled) Color.Unspecified else MaterialTheme.colorScheme.onSurface.copy(alpha = .38f))
-            Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
-                OutlinedButton(onClick = { onChange(states[(index - 1).coerceAtLeast(0)]) }, enabled = enabled && index > 0) { Text("−") }
-                Text(formatFunctionState(current))
-                OutlinedButton(onClick = { onChange(states[(index + 1).coerceAtMost(states.lastIndex)]) }, enabled = enabled && index < states.lastIndex) { Text("+") }
+    val state = load("brands:${device.deviceId}") { catalog.loadBrands(device) }
+    ListPage(title = device.name, onBack = onBack, state = state) { brands ->
+        if (brands.isEmpty()) item(key = "empty_brands") {
+            ListItem(
+                headlineContent = { Text("暂无品牌") },
+                supportingContent = { Text("该设备的品牌索引为空") },
+            )
+        }
+        items(brands, key = { it.stableId }) { brand ->
+            ListItem(
+                headlineContent = { Text(brand.name, fontWeight = FontWeight.Medium) },
+                supportingContent = { Text("brand=${brand.brandId} · 优先级 ${brand.priority}") },
+                trailingContent = { Text("选择") },
+                modifier = Modifier.clickable { onSelect(brand) },
+            )
+            HorizontalDivider()
+        }
+    }
+}
+
+/** 三级品牌遥控器型号列表。 */
+@Composable
+private fun RemoteListPage(
+    catalog: RemoteCatalog,
+    device: DeviceDefinition,
+    brand: BrandDefinition,
+    onBack: () -> Unit,
+    onSelect: (RemoteSummary) -> Unit,
+) {
+    val state = load("remotes:${brand.stableId}") { catalog.loadRemotes(device, brand) }
+    ListPage(title = "${brand.name}遥控器", onBack = onBack, state = state) { remotes ->
+        if (remotes.isEmpty()) item(key = "empty_remotes") {
+            ListItem(
+                headlineContent = { Text("暂无遥控器") },
+                supportingContent = { Text("品牌文件没有引用任何型号") },
+            )
+        }
+        items(remotes, key = { it.modelId }) { remote ->
+            ListItem(
+                headlineContent = { Text(remote.modelId, fontWeight = FontWeight.Medium) },
+                supportingContent = {
+                    Text(
+                        remote.unavailableReason
+                            ?: "${remote.source.uppercase()} · ${formatFrequency(remote.frequency)} · ${remote.commandCount} 项",
+                    )
+                },
+                trailingContent = { Text(if (remote.isSendable) "可发送" else "仅浏览") },
+                modifier = Modifier.clickable { onSelect(remote) },
+            )
+            HorizontalDivider()
+        }
+    }
+}
+
+/** 四级遥控器控制项列表。 */
+@Composable
+private fun ControlListPage(
+    catalog: RemoteCatalog,
+    device: DeviceDefinition,
+    brand: BrandDefinition,
+    summary: RemoteSummary,
+    transmitter: FixedIrTransmitter,
+    onBack: () -> Unit,
+) {
+    val context = LocalContext.current
+    val state = load("remote:${device.deviceId}:${summary.modelId}") {
+        catalog.loadRemote(device, summary)
+    }
+    ListPage(title = summary.modelId, onBack = onBack, state = state) { remote ->
+        item(key = "remote_info") {
+            ListItem(
+                headlineContent = { Text(brand.name, fontWeight = FontWeight.Medium) },
+                supportingContent = {
+                    Text(
+                        remote.unavailableReason
+                            ?: "${remote.source.uppercase()} · ${formatFrequency(remote.frequency)}",
+                    )
+                },
+                trailingContent = { Text(if (transmitter.hasEmitter()) "红外就绪" else "无红外硬件") },
+            )
+            HorizontalDivider()
+        }
+        if (remote.commands.isEmpty()) {
+            item(key = "empty_controls") {
+                ListItem(
+                    headlineContent = { Text("没有控制项") },
+                    supportingContent = { Text(remote.unavailableReason ?: "型号文件为空") },
+                )
+            }
+        } else {
+            items(remote.commands, key = { it.key }) { command ->
+                RemoteControlListItem(
+                    command = command,
+                    hardwareReady = transmitter.hasEmitter(),
+                    onSend = {
+                        runCatching { transmitter.transmit(remote, command) }
+                            .onSuccess { Toast.makeText(context, "已发送：${command.title}", Toast.LENGTH_SHORT).show() }
+                            .onFailure { showError(context, it) }
+                    },
+                )
+                HorizontalDivider()
             }
         }
     }
 }
 
-private fun formatFunctionState(value: Int): String = if (value in 30..1440 && value % 30 == 0) {
-    "%02d:%02d".format(value / 60, value % 60)
-} else value.toString()
-
-/** Compose 事件的错误反馈；红外编码和发送均由 Java 层完成。 */
-private fun showTransmitError(context: Context, error: Throwable) {
-    error.printStackTrace()
-    Toast.makeText(context, "发送失败：${error.message ?: "未知错误"}", Toast.LENGTH_LONG).show()
+/** 可被所有固定码设备复用的一行遥控器控制。 */
+@Composable
+private fun RemoteControlListItem(
+    command: RemoteCommand,
+    hardwareReady: Boolean,
+    onSend: () -> Unit,
+) {
+    ListItem(
+        headlineContent = { Text(command.title, fontWeight = FontWeight.Medium) },
+        supportingContent = { Text(command.description) },
+        trailingContent = {
+            Button(onClick = onSend, enabled = command.isEnabled && hardwareReady) {
+                Text(if (command.isEnabled) "发送" else "不可用")
+            }
+        },
+    )
 }
 
+/**
+ * 提供统一 Scaffold、加载态和 LazyColumn 容器。
+ *
+ * <p>成功状态的 content 接收 LazyListScope，因此四级页面均直接使用 ListItem。</p>
+ */
 @Composable
-private fun Section(title: String, content: @Composable () -> Unit) {
-    Card(shape = RoundedCornerShape(22.dp)) {
-        Column(
-            modifier = Modifier.fillMaxWidth().padding(18.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp),
-        ) {
-            Text(title, fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.onSurfaceVariant)
-            content()
+@OptIn(ExperimentalMaterial3Api::class)
+private fun <T> ListPage(
+    title: String,
+    onBack: (() -> Unit)?,
+    state: LoadState<T>,
+    content: androidx.compose.foundation.lazy.LazyListScope.(T) -> Unit,
+) {
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        topBar = {
+            TopAppBar(
+                title = { Text(title) },
+                navigationIcon = {
+                    if (onBack != null) {
+                        Button(onClick = onBack, modifier = Modifier.padding(horizontal = 8.dp)) {
+                            Text("返回")
+                        }
+                    }
+                },
+            )
+        },
+    ) { padding ->
+        LazyColumn(modifier = Modifier.fillMaxSize().padding(padding)) {
+            when (state) {
+                LoadState.Loading -> item(key = "loading") {
+                    ListItem(
+                        headlineContent = { Text("正在加载") },
+                        leadingContent = { CircularProgressIndicator() },
+                    )
+                }
+                is LoadState.Failed -> item(key = "error") {
+                    ListItem(
+                        headlineContent = { Text("数据加载失败") },
+                        supportingContent = { Text(state.error.message ?: state.error.javaClass.simpleName) },
+                    )
+                }
+                is LoadState.Ready -> content(state.value)
+            }
         }
     }
 }
 
+/** 在 IO 线程执行指定页面的数据加载，并按 key 自动重新加载。 */
 @Composable
-private fun ToggleRow(label: String, checked: Boolean, enabled: Boolean, onCheckedChange: (Boolean) -> Unit) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Text(label, color = if (enabled) Color.Unspecified else MaterialTheme.colorScheme.onSurface.copy(alpha = .38f))
-        Switch(checked = checked, enabled = enabled, onCheckedChange = onCheckedChange)
+private fun <T> load(key: String, block: () -> T): LoadState<T> {
+    var state by remember(key) { mutableStateOf<LoadState<T>>(LoadState.Loading) }
+    LaunchedEffect(key) {
+        state = LoadState.Loading
+        state = try {
+            LoadState.Ready(withContext(Dispatchers.IO) { block() })
+        } catch (error: Throwable) {
+            LoadState.Failed(error)
+        }
     }
+    return state
+}
+
+/** 将 Hz 格式化为列表使用的 kHz 文本。 */
+private fun formatFrequency(frequency: Int): String = if (frequency > 0) {
+    "%.2f kHz".format(frequency / 1000.0)
+} else {
+    "频率缺失"
+}
+
+/** 向用户展示编码、硬件或权限错误。 */
+private fun showError(context: Context, error: Throwable) {
+    error.printStackTrace()
+    val message = if (error is SecurityException) {
+        "系统拒绝 TRANSMIT_IR 权限"
+    } else {
+        error.message ?: "未知错误"
+    }
+    Toast.makeText(context, "发送失败：$message", Toast.LENGTH_LONG).show()
 }
