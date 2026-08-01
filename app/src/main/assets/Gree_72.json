@@ -1,0 +1,1806 @@
+{
+  "status": 0,
+  "data": {
+    "tree": {},
+    "others": [
+      {
+        "_id": "72_10727",
+        "key": {
+          "1001": "000400400940",
+          "1518": "if(exts~=nil) then\nif (power==0) then\nlf=exts[21]; \nif (lf ==1) then\nbytes[6]=(bytes[6]&0x0F )+ 0x10 ;\nif (functionId==21) then \nbytes[1]=(bytes[1]&0xBF) + 0x40 ;\nbytes[10]=(bytes[10]&0xBF) + 0x40 ;\nend\nelseif (lf ==2) then\nbytes[6]=(bytes[6]&0x0F);\nif (functionId==21) then \nbytes[1]=(bytes[1]&0xBF);\nbytes[10]=(bytes[10]&0xBF);\nend\nend\nbytes[9]= 0xC0+(((bytes[1]&0x0F)+ (bytes[2]&0x0F) + ( bytes[3]&0x0F) +( bytes[4]&0x0F) +  ((bytes[6]&0xF0)>>4) )<<4) ;\nss=exts[18]; \nif (ss ==1) then\nbytes[9]= bytes[9]+0x04;\nend\nend\nif(power==1) then\ntiming_on=exts[9]; \nif((timing_on~=nil)and(timing_on>0) and (timing_on<=1440))then\nbytes1={};\nif (timing_on<600)  then\nif (timing_on%60==0) then\nbytes[2]=bytes[2]+0x80;\nelse \nbytes[2]=bytes[2]+0x90;\nend\nbytes[3]=bytes[3]+(math.floor(timing_on\/60));\nelseif (timing_on>600 and timing_on<1200)  then\nif (timing_on%60==0) then\nbytes[2]=bytes[2]+0xA0;\nelse \nbytes[2]=bytes[2]+0xB0;\nend\nbytes[3]=bytes[3]+(math.floor(timing_on\/60))-10;\nelseif (timing_on>1200 and timing_on<=1440)  then\nif (timing_on%60==0) then\nbytes[2]=bytes[2]+0xC0;\nelse \nbytes[2]=bytes[2]+0xD0;\nend\nbytes[3]=bytes[3]+(math.floor(timing_on\/60))-20;\nend\nbytes1[1]=bytes[1];\nbytes1[2]=bytes[2];\nbytes1[3]=bytes[3];\nbytes1[4]=bytes[4];\nbytes1[5]=bytes[5];\nbytes1[6]=bytes[6];\nbytes1[7]=bytes[7];\nbytes1[8]=bytes[8];\nbytes1[9]= 0xC0+(((bytes1[1]&0x0F)+ (bytes1[2]&0x0F) + ( bytes1[3]&0x0F) +( bytes1[4]&0x0F) +  ((bytes1[6]&0xF0)>>4) )<<4) ;\nbytes1[10]=bytes[1];\nbytes1[11]=bytes[2];\nbytes1[12]=bytes[3];\nbytes1[13]=bytes[4]+0x10;;\nbytes1[14]=bytes[5];\nbytes1[15]=(timing_on&0xFF);\nbytes1[16]=((timing_on&0xF00)>>8);\nbytes1[17]=0;\nbytes1[18]= (bytes1[10]&0x0F) + ( bytes1[11]&0x0F) +   (bytes1[12]&0x0F) +   (bytes1[13]&0x0F) +  ((bytes1[15]&0xF0)>>4);\nbytes1[18]=((0x0A+(bytes1[18]&0x0F))<<4)+0x02;\nbytes1[19]=bytes[1];\nbytes1[20]=bytes[2];\nbytes1[21]=bytes[3];\nbytes1[22]=bytes[4]+0x20;\nbytes1[23]=bytes[5];\nbytes1[24]=bytes[15];\nbytes1[25]=bytes[16];\nbytes1[26]=bytes[17];\nbytes1[27]= (bytes1[19]&0x0F) + ( bytes1[20]&0x0F) +   (bytes1[21]&0x0F) +   (bytes1[22]&0x0F) +  ((bytes1[24]&0xF0)>>4)+((bytes1[26]&0xF0)>>4);\nbytes1[27]=((0x0A+(bytes1[27]&0x0F))<<4);\nbytes=bytes1;\nreturn;\nend\nelseif(power==0) then\ntiming_off=exts[10]; \nif((timing_off~=nil)and(timing_off>0) and (timing_off<=1440))then\nbytes1={};\nif (timing_off<600)  then\nif (timing_off%60==0) then\nbytes[2]=bytes[2]+0x80;\nelse \nbytes[2]=bytes[2]+0x90;\nend\nbytes[3]=bytes[3]+(math.floor(timing_off\/60));\nelseif (timing_off>600 and timing_off<1200)  then\nif (timing_off%60==0) then\nbytes[2]=bytes[2]+0xA0;\nelse \nbytes[2]=bytes[2]+0xB0;\nend\nbytes[3]=bytes[3]+(math.floor(timing_off\/60))-10;\nelseif (timing_off>1200 and timing_off<=1440)  then\nif (timing_off%60==0) then\nbytes[2]=bytes[2]+0xC0;\nelse \nbytes[2]=bytes[2]+0xD0;\nend\nbytes[3]=bytes[3]+(math.floor(timing_off\/60))-20;\nend\nbytes1[1]=bytes[1];\nbytes1[2]=bytes[2];\nbytes1[3]=bytes[3];\nbytes1[4]=bytes[4];\nbytes1[5]=bytes[5];\nbytes1[6]=bytes[6];\nbytes1[7]=bytes[7];\nbytes1[8]=bytes[8];\nbytes1[9]= 0xC0+(((bytes1[1]&0x0F)+ (bytes1[2]&0x0F) + ( bytes1[3]&0x0F) +( bytes1[4]&0x0F) +  ((bytes1[6]&0xF0)>>4) )<<4) ;\nbytes1[10]=bytes[1];\nbytes1[11]=bytes[2];\nbytes1[12]=bytes[3];\nbytes1[13]=bytes[4]+0x10;;\nbytes1[14]=bytes[5];\nbytes1[15]=0;\nbytes1[16]=((timing_off&0x0F)<<4);\nbytes1[17]=((timing_off&0xFF0)>>4);\nbytes1[18]= (bytes1[10]&0x0F) + ( bytes1[11]&0x0F) +   (bytes1[12]&0x0F) +   (bytes1[13]&0x0F) +  ((bytes1[16]&0xF0)>>4)+  ((bytes1[17]&0xF0)>>4);\nbytes1[18]=((0x0A+(bytes1[18]&0x0F))<<4)+0x01;\nbytes1[19]=bytes[1];\nbytes1[20]=bytes[2];\nbytes1[21]=bytes[3];\nbytes1[22]=bytes[4]+0x20;\nbytes1[23]=bytes[5];\nbytes1[24]=bytes[15];\nbytes1[25]=bytes[16];\nbytes1[26]=bytes[17];\nbytes1[27]= (bytes1[19]&0x0F) + ( bytes1[20]&0x0F) +   (bytes1[21]&0x0F) +   (bytes1[22]&0x0F) +  ((bytes1[24]&0xF0)>>4)+((bytes1[26]&0xF0)>>4);\nbytes1[27]=((0x0A+(bytes1[27]&0x0F))<<4);\nbytes=bytes1;\nreturn;\nend\nend\nend\nif (functionId==6) then\nbytes[1]=(bytes[1]|0x40);\nbytes[10]=(bytes[10]|0x40);\nelse if (functionId==7) then\nbytes[1]=(bytes[1]&0xBF);\nbytes[10]=(bytes[10]&0xBF);\nend\nend\nbytes[18]=(bytes[18]&0x0F)+(( 0x0A+(bytes[10]&0x0F) + ( bytes[11]&0x0F) +   (bytes[12]&0x0F) +   (bytes[13]&0x0F) +  ((bytes[15]&0xF0)>>4) +   ((bytes[17]&0xF0)>>4))<<4) ;",
+          "1013": "090204004A4C00808400090204014A4C01808401090204034A4C03808403090204034A4C03808405",
+          "1002": "12490020500211200050490020700200000030",
+          "300": "9000,4500",
+          "1015": "090102012C3001494A01090102002C3000494A00",
+          "1008": "0805100C010305070A",
+          "1515": "8|0-1|0|CH@9|0-1440,30|1|CHAFD@10|0-1440,30|0|CHAFD@11|1,0-1|2|CHAFD@12|1,0-1|0|H@13|0-1|0|CHAFD@14|0-1|2|CHAFD@15|0-1|0|CD@16|0-3|0|CHAFD@18|0-1|0|C@21|1-2|0|CHAFD@22|0-2|0|CHD@106|0-2|0|CHAFD",
+          "1503": "T",
+          "1511": "bytes[17]= (byte)( (bytes[9]&0x0F) +  ( bytes[10]&0x0F) +  (bytes[11]&0x0F) +  (bytes[12]&0x0F) +  ((bytes[14]&0xF0)>>>4) +  ((bytes[16]&0xF0)>>>4)); \t  bytes[17]=(byte)(((byte)0x0A+(byte)(bytes[17]&0x0F))<<4);",
+          "1003": "0401010A01",
+          "1522": "if(exts~=nil) then\nif (power==0) then\nlf=exts[21]; \nif (lf ==1) then\nbytes[6]=bit32.band(bytes[6],0x0F )+ 0x10 ;\nif (functionId==21) then \nbytes[1]=bit32.band(bytes[1],0xBF) + 0x40 ;\nbytes[10]=bit32.band(bytes[10],0xBF) + 0x40 ;\nend\nelseif (lf ==2) then\nbytes[6]=bit32.band(bytes[6],0x0F);\nif (functionId==21) then \nbytes[1]=bit32.band(bytes[1],0xBF);\nbytes[10]=bit32.band(bytes[10],0xBF);\nend\nend\nbytes[9]= 0xC0+bit32.lshift((bit32.band(bytes[1],0x0F)+ bit32.band(bytes[2],0x0F) + bit32.band( bytes[3],0x0F) +bit32.band( bytes[4],0x0F) +  bit32.rshift(bit32.band(bytes[6],0xF0),4) ),4) ;\nss=exts[18]; \nif (ss ==1) then\nbytes[9]= bytes[9]+0x04;\nend\nend\nif(power==1) then\ntiming_on=exts[9]; \nif((timing_on~=nil)and(timing_on>0) and (timing_on<=1440))then\nbytes1={};\nif (timing_on<600)  then\nif (timing_on%60==0) then\nbytes[2]=bytes[2]+0x80;\nelse \nbytes[2]=bytes[2]+0x90;\nend\nbytes[3]=bytes[3]+(math.floor(timing_on\/60));\nelseif (timing_on>600 and timing_on<1200)  then\nif (timing_on%60==0) then\nbytes[2]=bytes[2]+0xA0;\nelse \nbytes[2]=bytes[2]+0xB0;\nend\nbytes[3]=bytes[3]+(math.floor(timing_on\/60))-10;\nelseif (timing_on>1200 and timing_on<=1440)  then\nif (timing_on%60==0) then\nbytes[2]=bytes[2]+0xC0;\nelse \nbytes[2]=bytes[2]+0xD0;\nend\nbytes[3]=bytes[3]+(math.floor(timing_on\/60))-20;\nend\nbytes1[1]=bytes[1];\nbytes1[2]=bytes[2];\nbytes1[3]=bytes[3];\nbytes1[4]=bytes[4];\nbytes1[5]=bytes[5];\nbytes1[6]=bytes[6];\nbytes1[7]=bytes[7];\nbytes1[8]=bytes[8];\nbytes1[9]= 0xC0+bit32.lshift((bit32.band(bytes1[1],0x0F)+ bit32.band(bytes1[2],0x0F) + bit32.band( bytes1[3],0x0F) +bit32.band( bytes1[4],0x0F) +  bit32.rshift(bit32.band(bytes1[6],0xF0),4) ),4) ;\nbytes1[10]=bytes[1];\nbytes1[11]=bytes[2];\nbytes1[12]=bytes[3];\nbytes1[13]=bytes[4]+0x10;;\nbytes1[14]=bytes[5];\nbytes1[15]=bit32.band(timing_on,0xFF);\nbytes1[16]=bit32.rshift(bit32.band(timing_on,0xF00),8);\nbytes1[17]=0;\nbytes1[18]= bit32.band(bytes1[10],0x0F) + bit32.band( bytes1[11],0x0F) +   bit32.band(bytes1[12],0x0F) +   bit32.band(bytes1[13],0x0F) +  bit32.rshift(bit32.band(bytes1[15],0xF0),4);\nbytes1[18]=bit32.lshift((0x0A+bit32.band(bytes1[18],0x0F)),4)+0x02;\nbytes1[19]=bytes[1];\nbytes1[20]=bytes[2];\nbytes1[21]=bytes[3];\nbytes1[22]=bytes[4]+0x20;\nbytes1[23]=bytes[5];\nbytes1[24]=bytes[15];\nbytes1[25]=bytes[16];\nbytes1[26]=bytes[17];\nbytes1[27]= bit32.band(bytes1[19],0x0F) + bit32.band( bytes1[20],0x0F) +   bit32.band(bytes1[21],0x0F) +   bit32.band(bytes1[22],0x0F) +  bit32.rshift(bit32.band(bytes1[24],0xF0),4)+bit32.rshift(bit32.band(bytes1[26],0xF0),4);\nbytes1[27]=bit32.lshift((0x0A+bit32.band(bytes1[27],0x0F)),4);\nbytes=bytes1;\nreturn;\nend\nelseif(power==0) then\ntiming_off=exts[10]; \nif((timing_off~=nil)and(timing_off>0) and (timing_off<=1440))then\nbytes1={};\nif (timing_off<600)  then\nif (timing_off%60==0) then\nbytes[2]=bytes[2]+0x80;\nelse \nbytes[2]=bytes[2]+0x90;\nend\nbytes[3]=bytes[3]+(math.floor(timing_off\/60));\nelseif (timing_off>600 and timing_off<1200)  then\nif (timing_off%60==0) then\nbytes[2]=bytes[2]+0xA0;\nelse \nbytes[2]=bytes[2]+0xB0;\nend\nbytes[3]=bytes[3]+(math.floor(timing_off\/60))-10;\nelseif (timing_off>1200 and timing_off<=1440)  then\nif (timing_off%60==0) then\nbytes[2]=bytes[2]+0xC0;\nelse \nbytes[2]=bytes[2]+0xD0;\nend\nbytes[3]=bytes[3]+(math.floor(timing_off\/60))-20;\nend\nbytes1[1]=bytes[1];\nbytes1[2]=bytes[2];\nbytes1[3]=bytes[3];\nbytes1[4]=bytes[4];\nbytes1[5]=bytes[5];\nbytes1[6]=bytes[6];\nbytes1[7]=bytes[7];\nbytes1[8]=bytes[8];\nbytes1[9]= 0xC0+bit32.lshift((bit32.band(bytes1[1],0x0F)+ bit32.band(bytes1[2],0x0F) + bit32.band( bytes1[3],0x0F) +bit32.band( bytes1[4],0x0F) +  bit32.rshift(bit32.band(bytes1[6],0xF0),4) ),4) ;\nbytes1[10]=bytes[1];\nbytes1[11]=bytes[2];\nbytes1[12]=bytes[3];\nbytes1[13]=bytes[4]+0x10;;\nbytes1[14]=bytes[5];\nbytes1[15]=0;\nbytes1[16]=bit32.lshift(bit32.band(timing_off,0x0F),4);\nbytes1[17]=bit32.rshift(bit32.band(timing_off,0xFF0),4);\nbytes1[18]= bit32.band(bytes1[10],0x0F) + bit32.band( bytes1[11],0x0F) +   bit32.band(bytes1[12],0x0F) +   bit32.band(bytes1[13],0x0F) +  bit32.rshift(bit32.band(bytes1[16],0xF0),4)+  bit32.rshift(bit32.band(bytes1[17],0xF0),4);\nbytes1[18]=bit32.lshift((0x0A+bit32.band(bytes1[18],0x0F)),4)+0x01;\nbytes1[19]=bytes[1];\nbytes1[20]=bytes[2];\nbytes1[21]=bytes[3];\nbytes1[22]=bytes[4]+0x20;\nbytes1[23]=bytes[5];\nbytes1[24]=bytes[15];\nbytes1[25]=bytes[16];\nbytes1[26]=bytes[17];\nbytes1[27]= bit32.band(bytes1[19],0x0F) + bit32.band( bytes1[20],0x0F) +   bit32.band(bytes1[21],0x0F) +   bit32.band(bytes1[22],0x0F) +  bit32.rshift(bit32.band(bytes1[24],0xF0),4)+bit32.rshift(bit32.band(bytes1[26],0xF0),4);\nbytes1[27]=bit32.lshift((0x0A+bit32.band(bytes1[27],0x0F)),4);\nbytes=bytes1;\nreturn;\nend\nend\nend\nif (functionId==6) then\nbytes[1]=bit32.bor(bytes[1],0x40);\nbytes[10]=bit32.bor(bytes[10],0x40);\nelse if (functionId==7) then\nbytes[1]=bit32.band(bytes[1],0xBF);\nbytes[10]=bit32.band(bytes[10],0xBF);\nend\nend\nbytes[18]=bit32.band(bytes[18],0x0F)+bit32.lshift(( 0x0A+bit32.band(bytes[10],0x0F) + bit32.band( bytes[11],0x0F) +   bit32.band(bytes[12],0x0F) +   bit32.band(bytes[13],0x0F) +  bit32.rshift(bit32.band(bytes[15],0xF0),4) +   bit32.rshift(bit32.band(bytes[17],0xF0),4)),4) ;",
+          "301": "610,580",
+          "306": "1",
+          "305": "482",
+          "1517": "8@106&1-2*0|106@8&1-1*0|5@8&1-1*0|5@106&1-2*0|22@106&0-2*1",
+          "1506": "0,1",
+          "1017": "0808001314005B5C00@0808011314015B5C01@080B001213005A5B00@080B011213015A5B01@080C00101101585901@080C01101100585900@080F00101100585900@080F01101101585901@080D00111200595A00@080D01111201595A01@080E001F2000676800@080E011F2001676801@051000343800@051001343801@051002343802@051003343803@051200444800@051201444804@056A00707400@056A01707404@056A02707408@0B1600000100484900777800@0B1601000101484901777800@0B1602000100484900777801",
+          "1516": "9@30-1440,30&9|10@30-1440,30&9",
+          "888888": [
+            {
+              "fname": "",
+              "fkey": "TURBO",
+              "fid": 8
+            },
+            {
+              "exts": {
+                "1509": "4&3|13&3|22&3",
+                "306": "1",
+                "303": "4&610,20000|8&610,40000,9000,4500|13&610,20000|17&610,40000,9000,4500|22&610,20000",
+                "302": "610,1680",
+                "301": "610,580",
+                "300": "9000,4500"
+              },
+              "fname": "",
+              "fkey": "Timer On",
+              "fid": 9
+            },
+            {
+              "fname": "",
+              "fkey": "Timer Off",
+              "fid": 10
+            },
+            {
+              "fname": "",
+              "fkey": "Light",
+              "fid": 11
+            },
+            {
+              "fname": "",
+              "fkey": "Aux Heat",
+              "fid": 12
+            },
+            {
+              "fname": "",
+              "fkey": "Health",
+              "fid": 13
+            },
+            {
+              "fname": "",
+              "fkey": "Air Change",
+              "fid": 14
+            },
+            {
+              "fname": "",
+              "fkey": "Dry",
+              "fid": 15
+            },
+            {
+              "fname": "",
+              "fkey": "Show Temp",
+              "fid": 16
+            },
+            {
+              "fname": "",
+              "fkey": "ECO",
+              "fid": 18
+            },
+            {
+              "fname": "",
+              "fkey": "lr_wind_mode",
+              "fid": 21
+            },
+            {
+              "fname": "",
+              "fkey": "sleep",
+              "fid": 22
+            },
+            {
+              "fname": "",
+              "fkey": "mute",
+              "fid": 106
+            }
+          ],
+          "1012": "060508014D5001060508044D50040C0508000C10094D50005458090F0204010508034A4C014D5003808401060508024D5002",
+          "303": "4&610,20000|8&610,40000,9000,4500|13&610,20000",
+          "1505": "S&0,2,3",
+          "302": "610,1680",
+          "1509": "4&3|13&3",
+          "1507": "0,1"
+        },
+        "frequency": 38000,
+        "type": 2,
+        "source": "kk",
+        "brand": "72",
+        "order": 1,
+        "device": 3
+      },
+      {
+        "_id": "72_2607",
+        "key": {
+          "1001": "00020041",
+          "1518": "if(exts~=nil) then\ntiming_on=exts[9] \ntiming_off=exts[10] \nbytes1={}  \nfor i=1,9,1 do bytes1[i]=bytes[i] bytes1[i+9]=bytes[i] end \nbytes1[13]=0x60 \nif(((timing_on==0)or(timing_on==nil))and((timing_off==0) or(timing_off==nil)))then return  end\nif((timing_on~=nil)and(timing_on>0)) then\nif(timing_on<600) then \n\tif(timing_on%60==0) then \n\t\tbytes1[2]=(bytes1[2]&0x0F)+0x80 \n\t\telse bytes1[2]=(bytes1[2]&0x0F)+0x90 \n\t\t\tend \nelseif((timing_on>=600)and(timing_on<1200)) then \n\tif(timing_on%60==0) then\n\t\tbytes1[2]=(bytes[2]&0x0F)+0xA0 \n\t\telse bytes1[2]=(bytes1[2]&0x0F)+0xB0  \n\t\t\tend\nelseif(timing_on>=1200) then \n\tif(timing_on%60==0) then \n\t\tbytes[2]=(bytes1[2]&0x0F)+0xC0  \n\t\telse bytes1[2]=(bytes1[2]&0x0F)+0xD0 \n\t\t\tend \nend\nbytes1[3]=bytes1[3]+math.floor((timing_on\/60)%10) \nbytes1[9]=(((bytes1[1]&0x0F)+(bytes1[2]&0x0F)+(bytes1[3]&0x0F)+(bytes1[4]&0x0F)+(bytes1[6]>>4)+0x0C)<<4) \nbytes1[11]=bytes1[2] \nbytes1[12]=bytes1[3] \nbytes1[15]=(timing_on&0xFF) \nbytes1[16]=((timing_on>>8)&0x0F) \nbytes1[17]=0 \nbytes1[18]=(((bytes1[9]>>4)+(bytes1[15]>>4)+(bytes1[16]>>4)+(bytes1[17]>>4)+0x0D)<<4)+0x02 \nelseif((timing_off~=nil)and(timing_off>0))then\n\tif(timing_off<600) then \n\t\tif(timing_off%60==0) then \n\t\t\tbytes1[2]=(bytes1[2]&0x0F)+0x80  \n\t\t\telse \n\t\t\tbytes1[2]=(bytes1[2]&0x0F)+0x90 \n\t\t\tend \n\telseif((timing_off>=600)and(timing_off<1200)) then \n\t\tif(timing_off%60==0) then \n\t\t\tbytes1[2]=(bytes1[2]&0x0F)+0xA0  \n\t\t\telse bytes1[2]=(bytes1[2]&0x0F)+0xB0 \n\t\t\t\tend \n\telseif((timing_off)>=1200) then \n\t\tif(timing_off%60==0) then \n\t\t\tbytes1[2]=(bytes1[2]&0x0F)+0xC0 \n\t\t\telse bytes1[2]=(bytes1[2]&0x0F)+0xD0 \n\t\t\t\tend \n\tend\n\tbytes1[3]=bytes1[3]+math.floor((timing_off\/60)%10) \n\tbytes1[9]=(((bytes1[1]&0x0F)+(bytes1[2]&0x0F)+(bytes1[3]&0x0F)+(bytes1[4]&0x0F)+(bytes1[6]>>4)+0x0C)<<4) \n\tbytes1[11]=bytes1[2] \n\tbytes1[12]=bytes1[3] \n\tbytes1[16]=((timing_off&0x0F)<<4) \n\tbytes1[17]=(timing_off>>4) \n\tbytes1[15]=0 \n\tbytes1[18]=(((bytes1[9]>>4)+(bytes1[15]>>4)+(bytes1[16]>>4)+(bytes1[17]>>4)+0x0D)<<4)+0x01 \nend\nbytes=bytes1 \nend",
+          "1013": "03020400030204010302040203020403",
+          "1002": "09490020500211200060",
+          "300": "9000,4500",
+          "1015": "060102012C3001060102002C3002060102002C3003060102002C3004060102002C3005060102002C3006060102012C3007060102012C3009060102012C300B060102002C3000",
+          "1008": "0805100C010305070A",
+          "1515": "13|0-1|0|CHAFD@14|0-1|0|CHAFD@21|1-9|0|CHAFD@15|0-1|0|CD@12|1,0-1|0|H@16|0-3|0|CHAFD@08|0-1|0|CH@11|1,0-1|2|CHAFD@22|0-1|0|CHD@09|0-1440,30|1|CHAFD@10|0-1440,30|0|CHAFD",
+          "1503": "T",
+          "1003": "020101",
+          "1522": "if(exts~=nil) then\ntiming_on=exts[9] \ntiming_off=exts[10] \nbytes1={}  \nfor i=1,9,1 do bytes1[i]=bytes[i] bytes1[i+9]=bytes[i] end \nbytes1[13]=0x60 \nif(((timing_on==0)or(timing_on==nil))and((timing_off==0) or(timing_off==nil)))then return  end\nif((timing_on~=nil)and(timing_on>0)) then\nif(timing_on<600) then \n\tif(timing_on%60==0) then \n\t\tbytes1[2]=bit32.band(bytes1[2],0x0F)+0x80 \n\t\telse bytes1[2]=bit32.band(bytes1[2],0x0F)+0x90 \n\t\t\tend \nelseif((timing_on>=600)and(timing_on<1200)) then \n\tif(timing_on%60==0) then\n\t\tbytes1[2]=bit32.band(bytes[2],0x0F)+0xA0 \n\t\telse bytes1[2]=bit32.band(bytes1[2],0x0F)+0xB0  \n\t\t\tend\nelseif(timing_on>=1200) then \n\tif(timing_on%60==0) then \n\t\tbytes[2]=bit32.band(bytes1[2],0x0F)+0xC0  \n\t\telse bytes1[2]=bit32.band(bytes1[2],0x0F)+0xD0 \n\t\t\tend \nend\nbytes1[3]=bytes1[3]+math.floor((timing_on\/60)%10) \nbytes1[9]=bit32.lshift((bit32.band(bytes1[1],0x0F)+bit32.band(bytes1[2],0x0F)+bit32.band(bytes1[3],0x0F)+bit32.band(bytes1[4],0x0F)+bit32.rshift(bytes1[6],4)+0x0C),4) \nbytes1[11]=bytes1[2] \nbytes1[12]=bytes1[3] \nbytes1[15]=bit32.band(timing_on,0xFF) \nbytes1[16]=bit32.band(bit32.rshift(timing_on,8),0x0F) \nbytes1[17]=0 \nbytes1[18]=bit32.lshift((bit32.rshift(bytes1[9],4)+bit32.rshift(bytes1[15],4)+bit32.rshift(bytes1[16],4)+bit32.rshift(bytes1[17],4)+0x0D),4)+0x02 \nelseif((timing_off~=nil)and(timing_off>0))then\n\tif(timing_off<600) then \n\t\tif(timing_off%60==0) then \n\t\t\tbytes1[2]=bit32.band(bytes1[2],0x0F)+0x80  \n\t\t\telse \n\t\t\tbytes1[2]=bit32.band(bytes1[2],0x0F)+0x90 \n\t\t\tend \n\telseif((timing_off>=600)and(timing_off<1200)) then \n\t\tif(timing_off%60==0) then \n\t\t\tbytes1[2]=bit32.band(bytes1[2],0x0F)+0xA0  \n\t\t\telse bytes1[2]=bit32.band(bytes1[2],0x0F)+0xB0 \n\t\t\t\tend \n\telseif((timing_off)>=1200) then \n\t\tif(timing_off%60==0) then \n\t\t\tbytes1[2]=bit32.band(bytes1[2],0x0F)+0xC0 \n\t\t\telse bytes1[2]=bit32.band(bytes1[2],0x0F)+0xD0 \n\t\t\t\tend \n\tend\n\tbytes1[3]=bytes1[3]+math.floor((timing_off\/60)%10) \n\tbytes1[9]=bit32.lshift((bit32.band(bytes1[1],0x0F)+bit32.band(bytes1[2],0x0F)+bit32.band(bytes1[3],0x0F)+bit32.band(bytes1[4],0x0F)+bit32.rshift(bytes1[6],4)+0x0C),4) \n\tbytes1[11]=bytes1[2] \n\tbytes1[12]=bytes1[3] \n\tbytes1[16]=bit32.lshift(bit32.band(timing_off,0x0F),4) \n\tbytes1[17]=bit32.rshift(timing_off,4) \n\tbytes1[15]=0 \n\tbytes1[18]=bit32.lshift((bit32.rshift(bytes1[9],4)+bit32.rshift(bytes1[15],4)+bit32.rshift(bytes1[16],4)+bit32.rshift(bytes1[17],4)+0x0D),4)+0x01 \nend\nbytes=bytes1 \nend",
+          "301": "645,540",
+          "306": "1",
+          "305": "197",
+          "1517": "2@22&1-1*0",
+          "1506": "0,1,2,3,4,5,6,7,8,9",
+          "1017": "050D00111200@050D01111201@050E001F2000@050E011F2001@051501282C01@051502282C0D@051503282C00@051504282C02@051505282C03@051506282C04@051507282C05@051508282C06@051509282C0C@050F00101100@050F01101101@050C00101101@050C01101100@051000343800@051001343801@051002343802@051003343803@050800131400@050801131401@050B00121300@050B01121301@051600000100@051601000101",
+          "1516": "10@30-1440,30&9|9@30-1440,30&9",
+          "888888": [
+            {
+              "fname": "",
+              "fkey": "TURBO",
+              "fid": 8
+            },
+            {
+              "exts": {
+                "1509": "4&3|13&3",
+                "306": "1",
+                "305": "482",
+                "1002": "12419A20500211200080419A2060021E000062",
+                "303": "4&645,20700|8&645,40700,8930,4500|13&645,20700",
+                "302": "645,1680",
+                "301": "645,541",
+                "300": "9000,4500"
+              },
+              "fname": "",
+              "fkey": "Timer On",
+              "fid": 9
+            },
+            {
+              "fname": "",
+              "fkey": "Timer Off",
+              "fid": 10
+            },
+            {
+              "fname": "",
+              "fkey": "Light",
+              "fid": 11
+            },
+            {
+              "fname": "",
+              "fkey": "Aux Heat",
+              "fid": 12
+            },
+            {
+              "fname": "",
+              "fkey": "Health",
+              "fid": 13
+            },
+            {
+              "fname": "",
+              "fkey": "Air Change",
+              "fid": 14
+            },
+            {
+              "fname": "",
+              "fkey": "Dry",
+              "fid": 15
+            },
+            {
+              "fname": "",
+              "fkey": "Show Temp",
+              "fid": 16
+            },
+            {
+              "fname": "",
+              "fkey": "lr_wind_mode",
+              "fid": 21
+            },
+            {
+              "fname": "",
+              "fkey": "sleep",
+              "fid": 22
+            }
+          ],
+          "1012": "0305080103050804030508000305080303050802",
+          "303": "4&645,20700",
+          "302": "645,1680",
+          "1509": "4&3",
+          "1507": "0,1,2,3,4,5,6,7,8"
+        },
+        "frequency": 38000,
+        "type": 2,
+        "source": "kk",
+        "brand": "72",
+        "order": 2,
+        "device": 3
+      },
+      {
+        "_id": "72_777",
+        "key": {
+          "1001": "00020041",
+          "1518": "if(exts~=nil) then\nif(power==1) then\ntiming_on=exts[9]; \nif((timing_on~=nil)and(timing_on>0) and (timing_on<=1440))then\nif (timing_on<600)  then\nif (timing_on%60==0) then\nbytes[2]=bytes[2]+0x80;\nelse \nbytes[2]=bytes[2]+0x90;\nend\nbytes[3]=bytes[3]+(math.floor(timing_on\/60));\nelseif (timing_on>600 and timing_on<1200)  then\nif (timing_on%60==0) then\nbytes[2]=bytes[2]+0xA0;\nelse \nbytes[2]=bytes[2]+0xB0;\nend\nbytes[3]=bytes[3]+(math.floor(timing_on\/60))-10;\nelseif (timing_on>1200 and timing_on<=1440)  then\nif (timing_on%60==0) then\nbytes[2]=bytes[2]+0xC0;\nelse \nbytes[2]=bytes[2]+0xD0;\nend\nbytes[3]=bytes[3]+(math.floor(timing_on\/60))-20;\nend\nend\nelseif(power==0) then\ntiming_off=exts[10]; \nif((timing_off~=nil)and(timing_off>0) and (timing_off<=1440))then\nif (timing_off<600)  then\nif (timing_off%60==0) then\nbytes[2]=bytes[2]+0x80;\nelse \nbytes[2]=bytes[2]+0x90;\nend\nbytes[3]=bytes[3]+(math.floor(timing_off\/60));\nelseif (timing_off>600 and timing_off<1200)  then\nif (timing_off%60==0) then\nbytes[2]=bytes[2]+0xA0;\nelse \nbytes[2]=bytes[2]+0xB0;\nend\nbytes[3]=bytes[3]+(math.floor(timing_off\/60))-10;\nelseif (timing_off>1200 and timing_off<=1440)  then\nif (timing_off%60==0) then\nbytes[2]=bytes[2]+0xC0;\nelse \nbytes[2]=bytes[2]+0xD0;\nend\nbytes[3]=bytes[3]+(math.floor(timing_off\/60))-20;\nend\nend\nend\nend",
+          "1013": "03020400030204010302040203020403",
+          "1002": "054900005002",
+          "300": "9000,4500",
+          "1015": "0301020103010200",
+          "1515": "11|0-1|0|CHAFD@14|0-2|0|CHAFD@22|0-1|0|CHAFD@9|0-1440,30|1|CHAFD@10|0-1440,30|0|CHAFD",
+          "1003": "020101",
+          "301": "600,580",
+          "306": "1",
+          "305": "112",
+          "1506": "0,1",
+          "1017": "050B00121300@050B01121301@050E001E2000@050E011E2001@050E021E2002@051600000100@051601000101",
+          "888888": [
+            {
+              "fname": "",
+              "fkey": "Timer On",
+              "fid": 9
+            },
+            {
+              "fname": "",
+              "fkey": "Timer Off",
+              "fid": 10
+            },
+            {
+              "fname": "",
+              "fkey": "Light",
+              "fid": 11
+            },
+            {
+              "fname": "",
+              "fkey": "Air Change",
+              "fid": 14
+            },
+            {
+              "fname": "",
+              "fkey": "sleep",
+              "fid": 22
+            }
+          ],
+          "1012": "0305080103050804030508000305080303050802",
+          "302": "600,1680",
+          "1509": "-1&3"
+        },
+        "frequency": 38000,
+        "type": 2,
+        "source": "kk",
+        "brand": "72",
+        "order": 3,
+        "device": 3
+      },
+      {
+        "_id": "kk_3_72_2970",
+        "key": {
+          "1001": "000400400940",
+          "1518": "if(exts~=nil) then\nif (power==0) then\nlf=exts[21]; \nif (lf ==1) then\nbytes[6]=(bytes[6]&0x0F )+ 0x10 ;\nif (functionId==21) then \nbytes[1]=(bytes[1]&0xBF) + 0x40 ;\nbytes[10]=(bytes[10]&0xBF) + 0x40 ;\nend\nelseif (lf ==2) then\nbytes[6]=(bytes[6]&0x0F);\nif (functionId==21) then \nbytes[1]=(bytes[1]&0xBF);\nbytes[10]=(bytes[10]&0xBF);\nend\nend\nbytes[9]= 0xC0+(((bytes[1]&0x0F)+ (bytes[2]&0x0F) + ( bytes[3]&0x0F) +( bytes[4]&0x0F) +  ((bytes[6]&0xF0)>>4) )<<4) ;\nend\nif(power==1) then\ntiming_on=exts[9]; \nif((timing_on~=nil)and(timing_on>0) and (timing_on<=1440))then\nbytes1={};\nif (timing_on<600)  then\nif (timing_on%60==0) then\nbytes[2]=bytes[2]+0x80;\nelse \nbytes[2]=bytes[2]+0x90;\nend\nbytes[3]=bytes[3]+(math.floor(timing_on\/60));\nelseif (timing_on>600 and timing_on<1200)  then\nif (timing_on%60==0) then\nbytes[2]=bytes[2]+0xA0;\nelse \nbytes[2]=bytes[2]+0xB0;\nend\nbytes[3]=bytes[3]+(math.floor(timing_on\/60))-10;\nelseif (timing_on>1200 and timing_on<=1440)  then\nif (timing_on%60==0) then\nbytes[2]=bytes[2]+0xC0;\nelse \nbytes[2]=bytes[2]+0xD0;\nend\nbytes[3]=bytes[3]+(math.floor(timing_on\/60))-20;\nend\nbytes1[1]=bytes[1];\nbytes1[2]=bytes[2];\nbytes1[3]=bytes[3];\nbytes1[4]=bytes[4];\nbytes1[5]=bytes[5];\nbytes1[6]=bytes[6];\nbytes1[7]=bytes[7];\nbytes1[8]=bytes[8];\nbytes1[9]= 0xC0+(((bytes1[1]&0x0F)+ (bytes1[2]&0x0F) + ( bytes1[3]&0x0F) +( bytes1[4]&0x0F) +  ((bytes1[6]&0xF0)>>4) )<<4) ;\nbytes1[10]=bytes[1];\nbytes1[11]=bytes[2];\nbytes1[12]=bytes[3];\nbytes1[13]=bytes[4]+0x10;;\nbytes1[14]=bytes[5];\nbytes1[15]=(timing_on&0xFF);\nbytes1[16]=((timing_on&0xF00)>>8);\nbytes1[17]=0;\nbytes1[18]= (bytes1[10]&0x0F) + ( bytes1[11]&0x0F) +   (bytes1[12]&0x0F) +   (bytes1[13]&0x0F) +  ((bytes1[15]&0xF0)>>4);\nbytes1[18]=((0x0A+(bytes1[18]&0x0F))<<4)+0x02;\nbytes1[19]=bytes[1];\nbytes1[20]=bytes[2];\nbytes1[21]=bytes[3];\nbytes1[22]=bytes[4]+0x20;\nbytes1[23]=bytes[5];\nbytes1[24]=bytes[15];\nbytes1[25]=bytes[16];\nbytes1[26]=bytes[17];\nbytes1[27]=bytes[18];\nbytes1[27]=(bytes1[27]&0x0F)+(( 0x0A+(bytes1[19]&0x0F) + ( bytes1[20]&0x0F) +   (bytes1[21]&0x0F) +   (bytes1[22]&0x0F) +  ((bytes1[24]&0xF0)>>4) +   ((bytes1[26]&0xF0)>>4))<<4) ;\nbytes=bytes1;\nreturn;\nend\nelseif(power==0) then\ntiming_off=exts[10]; \nif((timing_off~=nil)and(timing_off>0) and (timing_off<=1440))then\nbytes1={};\nif (timing_off<600)  then\nif (timing_off%60==0) then\nbytes[2]=bytes[2]+0x80;\nelse \nbytes[2]=bytes[2]+0x90;\nend\nbytes[3]=bytes[3]+(math.floor(timing_off\/60));\nelseif (timing_off>600 and timing_off<1200)  then\nif (timing_off%60==0) then\nbytes[2]=bytes[2]+0xA0;\nelse \nbytes[2]=bytes[2]+0xB0;\nend\nbytes[3]=bytes[3]+(math.floor(timing_off\/60))-10;\nelseif (timing_off>1200 and timing_off<=1440)  then\nif (timing_off%60==0) then\nbytes[2]=bytes[2]+0xC0;\nelse \nbytes[2]=bytes[2]+0xD0;\nend\nbytes[3]=bytes[3]+(math.floor(timing_off\/60))-20;\nend\nbytes1[1]=bytes[1];\nbytes1[2]=bytes[2];\nbytes1[3]=bytes[3];\nbytes1[4]=bytes[4];\nbytes1[5]=bytes[5];\nbytes1[6]=bytes[6];\nbytes1[7]=bytes[7];\nbytes1[8]=bytes[8];\nbytes1[9]= 0xC0+(((bytes1[1]&0x0F)+ (bytes1[2]&0x0F) + ( bytes1[3]&0x0F) +( bytes1[4]&0x0F) +  ((bytes1[6]&0xF0)>>4) )<<4) ;\nbytes1[10]=bytes[1];\nbytes1[11]=bytes[2];\nbytes1[12]=bytes[3];\nbytes1[13]=bytes[4]+0x10;;\nbytes1[14]=bytes[5];\nbytes1[15]=0;\nbytes1[16]=((timing_off&0x0F)<<4);\nbytes1[17]=((timing_off&0xFF0)>>4);\nbytes1[18]= (bytes1[10]&0x0F) + ( bytes1[11]&0x0F) +   (bytes1[12]&0x0F) +   (bytes1[13]&0x0F) +  ((bytes1[16]&0xF0)>>4)+  ((bytes1[17]&0xF0)>>4);\nbytes1[18]=((0x0A+(bytes1[18]&0x0F))<<4)+0x01;\nbytes1[19]=bytes[1];\nbytes1[20]=bytes[2];\nbytes1[21]=bytes[3];\nbytes1[22]=bytes[4]+0x20;\nbytes1[23]=bytes[5];\nbytes1[24]=bytes[15];\nbytes1[25]=bytes[16];\nbytes1[26]=bytes[17];\nbytes1[27]=bytes[18];\nbytes1[27]=(bytes1[27]&0x0F)+(( 0x0A+(bytes1[19]&0x0F) + ( bytes1[20]&0x0F) +   (bytes1[21]&0x0F) +   (bytes1[22]&0x0F) +  ((bytes1[24]&0xF0)>>4) +   ((bytes1[26]&0xF0)>>4))<<4) ;\nbytes=bytes1;\nreturn;\nend\nend\nend\nif (functionId==6) then\nbytes[1]=(bytes[1]|0x40);\nbytes[10]=(bytes[10]|0x40);\nelse if (functionId==7) then\nbytes[1]=(bytes[1]&0xBF);\nbytes[10]=(bytes[10]&0xBF);\nend\nend\nret=((0x0A+(bytes[10]&0x0F) + ( bytes[11]&0x0F) +   (bytes[12]&0x0F) +   (bytes[13]&0x0F) +  ((bytes[15]&0xF0)>>4) +   ((bytes[17]&0xF0)>>4))<<4) ;\nbytes[18]=(bytes[18]&0x0F)+ret;",
+          "1013": "090204004A4C00808400090204014A4C01808401090204024A4C03808402090204034A4C03808403",
+          "1002": "12490020500211200050490020700200000030",
+          "300": "9000,4500",
+          "1015": "090102012C3001494A01090102002C3000494A00",
+          "1008": "0805100C010305070A",
+          "1515": "8|0-1|0|CH@9|0-1440,30|1|CHAFD@10|0-1440,30|0|CHAFD@11|1,0-1|2|CHAFD@12|1,0-1|0|H@15|0-1|0|CD@21|1-2|0|CHAFD@22|0-2|0|CHD@36|0-5|0|CHAFD@106|0-1|0|CHAFD",
+          "1503": "T",
+          "1511": "bytes[17]= (byte)( (bytes[9]&0x0F) +  ( bytes[10]&0x0F) +  (bytes[11]&0x0F) +  (bytes[12]&0x0F) +  ((bytes[14]&0xF0)>>>4) +  ((bytes[16]&0xF0)>>>4)); \t  bytes[17]=(byte)(((byte)0x0A+(byte)(bytes[17]&0x0F))<<4);",
+          "1003": "0401010A01",
+          "1522": "if(exts~=nil) then\nif (power==0) then\nlf=exts[21]; \nif (lf ==1) then\nbytes[6]=bit32.band(bytes[6],0x0F )+ 0x10 ;\nif (functionId==21) then \nbytes[1]=bit32.band(bytes[1],0xBF) + 0x40 ;\nbytes[10]=bit32.band(bytes[10],0xBF) + 0x40 ;\nend\nelseif (lf ==2) then\nbytes[6]=bit32.band(bytes[6],0x0F);\nif (functionId==21) then \nbytes[1]=bit32.band(bytes[1],0xBF);\nbytes[10]=bit32.band(bytes[10],0xBF);\nend\nend\nbytes[9]= 0xC0+bit32.lshift((bit32.band(bytes[1],0x0F)+ bit32.band(bytes[2],0x0F) + bit32.band( bytes[3],0x0F) +bit32.band( bytes[4],0x0F) +  bit32.rshift(bit32.band(bytes[6],0xF0),4) ),4) ;\nend\nif(power==1) then\ntiming_on=exts[9]; \nif((timing_on~=nil)and(timing_on>0) and (timing_on<=1440))then\nbytes1={};\nif (timing_on<600)  then\nif (timing_on%60==0) then\nbytes[2]=bytes[2]+0x80;\nelse \nbytes[2]=bytes[2]+0x90;\nend\nbytes[3]=bytes[3]+(math.floor(timing_on\/60));\nelseif (timing_on>600 and timing_on<1200)  then\nif (timing_on%60==0) then\nbytes[2]=bytes[2]+0xA0;\nelse \nbytes[2]=bytes[2]+0xB0;\nend\nbytes[3]=bytes[3]+(math.floor(timing_on\/60))-10;\nelseif (timing_on>1200 and timing_on<=1440)  then\nif (timing_on%60==0) then\nbytes[2]=bytes[2]+0xC0;\nelse \nbytes[2]=bytes[2]+0xD0;\nend\nbytes[3]=bytes[3]+(math.floor(timing_on\/60))-20;\nend\nbytes1[1]=bytes[1];\nbytes1[2]=bytes[2];\nbytes1[3]=bytes[3];\nbytes1[4]=bytes[4];\nbytes1[5]=bytes[5];\nbytes1[6]=bytes[6];\nbytes1[7]=bytes[7];\nbytes1[8]=bytes[8];\nbytes1[9]= 0xC0+bit32.lshift((bit32.band(bytes1[1],0x0F)+ bit32.band(bytes1[2],0x0F) + bit32.band( bytes1[3],0x0F) +bit32.band( bytes1[4],0x0F) +  bit32.rshift(bit32.band(bytes1[6],0xF0),4) ),4) ;\nbytes1[10]=bytes[1];\nbytes1[11]=bytes[2];\nbytes1[12]=bytes[3];\nbytes1[13]=bytes[4]+0x10;;\nbytes1[14]=bytes[5];\nbytes1[15]=bit32.band(timing_on,0xFF);\nbytes1[16]=bit32.rshift(bit32.band(timing_on,0xF00),8);\nbytes1[17]=0;\nbytes1[18]= bit32.band(bytes1[10],0x0F) + bit32.band( bytes1[11],0x0F) +   bit32.band(bytes1[12],0x0F) +   bit32.band(bytes1[13],0x0F) +  bit32.rshift(bit32.band(bytes1[15],0xF0),4);\nbytes1[18]=bit32.lshift((0x0A+bit32.band(bytes1[18],0x0F)),4)+0x02;\nbytes1[19]=bytes[1];\nbytes1[20]=bytes[2];\nbytes1[21]=bytes[3];\nbytes1[22]=bytes[4]+0x20;\nbytes1[23]=bytes[5];\nbytes1[24]=bytes[15];\nbytes1[25]=bytes[16];\nbytes1[26]=bytes[17];\nbytes1[27]=bytes[18];\nbytes1[27]=bit32.band(bytes1[27],0x0F)+bit32.lshift(( 0x0A+bit32.band(bytes1[19],0x0F) + bit32.band( bytes1[20],0x0F) +   bit32.band(bytes1[21],0x0F) +   bit32.band(bytes1[22],0x0F) +  bit32.rshift(bit32.band(bytes1[24],0xF0),4) +   bit32.rshift(bit32.band(bytes1[26],0xF0),4)),4) ;\nbytes=bytes1;\nreturn;\nend\nelseif(power==0) then\ntiming_off=exts[10]; \nif((timing_off~=nil)and(timing_off>0) and (timing_off<=1440))then\nbytes1={};\nif (timing_off<600)  then\nif (timing_off%60==0) then\nbytes[2]=bytes[2]+0x80;\nelse \nbytes[2]=bytes[2]+0x90;\nend\nbytes[3]=bytes[3]+(math.floor(timing_off\/60));\nelseif (timing_off>600 and timing_off<1200)  then\nif (timing_off%60==0) then\nbytes[2]=bytes[2]+0xA0;\nelse \nbytes[2]=bytes[2]+0xB0;\nend\nbytes[3]=bytes[3]+(math.floor(timing_off\/60))-10;\nelseif (timing_off>1200 and timing_off<=1440)  then\nif (timing_off%60==0) then\nbytes[2]=bytes[2]+0xC0;\nelse \nbytes[2]=bytes[2]+0xD0;\nend\nbytes[3]=bytes[3]+(math.floor(timing_off\/60))-20;\nend\nbytes1[1]=bytes[1];\nbytes1[2]=bytes[2];\nbytes1[3]=bytes[3];\nbytes1[4]=bytes[4];\nbytes1[5]=bytes[5];\nbytes1[6]=bytes[6];\nbytes1[7]=bytes[7];\nbytes1[8]=bytes[8];\nbytes1[9]= 0xC0+bit32.lshift((bit32.band(bytes1[1],0x0F)+ bit32.band(bytes1[2],0x0F) + bit32.band( bytes1[3],0x0F) +bit32.band( bytes1[4],0x0F) +  bit32.rshift(bit32.band(bytes1[6],0xF0),4) ),4) ;\nbytes1[10]=bytes[1];\nbytes1[11]=bytes[2];\nbytes1[12]=bytes[3];\nbytes1[13]=bytes[4]+0x10;;\nbytes1[14]=bytes[5];\nbytes1[15]=0;\nbytes1[16]=bit32.lshift(bit32.band(timing_off,0x0F),4);\nbytes1[17]=bit32.rshift(bit32.band(timing_off,0xFF0),4);\nbytes1[18]= bit32.band(bytes1[10],0x0F) + bit32.band( bytes1[11],0x0F) +   bit32.band(bytes1[12],0x0F) +   bit32.band(bytes1[13],0x0F) +  bit32.rshift(bit32.band(bytes1[16],0xF0),4)+  bit32.rshift(bit32.band(bytes1[17],0xF0),4);\nbytes1[18]=bit32.lshift((0x0A+bit32.band(bytes1[18],0x0F)),4)+0x01;\nbytes1[19]=bytes[1];\nbytes1[20]=bytes[2];\nbytes1[21]=bytes[3];\nbytes1[22]=bytes[4]+0x20;\nbytes1[23]=bytes[5];\nbytes1[24]=bytes[15];\nbytes1[25]=bytes[16];\nbytes1[26]=bytes[17];\nbytes1[27]=bytes[18];\nbytes1[27]=bit32.band(bytes1[27],0x0F)+bit32.lshift(( 0x0A+bit32.band(bytes1[19],0x0F) + bit32.band( bytes1[20],0x0F) +   bit32.band(bytes1[21],0x0F) +   bit32.band(bytes1[22],0x0F) +  bit32.rshift(bit32.band(bytes1[24],0xF0),4) +   bit32.rshift(bit32.band(bytes1[26],0xF0),4)),4) ;\nbytes=bytes1;\nreturn;\nend\nend\nend\nif (functionId==6) then\nbytes[1]=bit32.bor(bytes[1],0x40);\nbytes[10]=bit32.bor(bytes[10],0x40);\nelse if (functionId==7) then\nbytes[1]=bit32.band(bytes[1],0xBF);\nbytes[10]=bit32.band(bytes[10],0xBF);\nend\nend\nret=bit32.lshift((0x0A+bit32.band(bytes[10],0x0F) + bit32.band( bytes[11],0x0F) +   bit32.band(bytes[12],0x0F) +   bit32.band(bytes[13],0x0F) +  bit32.rshift(bit32.band(bytes[15],0xF0),4) +   bit32.rshift(bit32.band(bytes[17],0xF0),4)),4) ;\nbytes[18]=bit32.band(bytes[18],0x0F)+ret;",
+          "301": "640,560",
+          "306": "1",
+          "305": "482",
+          "1517": "8@106&1-2*0|106@8&1-1*0|5@8&1-1*0|5@106&1-2*0|22@106&0-2*1|1,2,3,4,8,12,15,22,106@36&1-5*0",
+          "1506": "0,1",
+          "1017": "0808001314005B5C00@0808011314015B5C01@080B001213005A5B00@080B011213015A5B01@080C00101101585901@080C01101100585900@051000343800@051001343801@051002343802@051003343803@080F00101100585900@080F01101101585901@056A00707400@056A01707408@0B1600000100484900777800@0B1601000101484901777800@0B1602000100484900777801@0524008C9000@0524018C9001@0524028C9002@0524038C9003@0524048C9004@0524058C9005",
+          "1516": "9@30-1440,30&9|10@30-1440,30&9",
+          "888888": [
+            {
+              "fname": "",
+              "fkey": "TURBO",
+              "fid": 8
+            },
+            {
+              "exts": {
+                "1509": "4&3|13&3|22&3",
+                "306": "1",
+                "303": "4&640,20000|8&640,40000,9000,4500|13&640,20000|17&640,40000,9000,4500|22&640,20000",
+                "302": "640,1660",
+                "301": "640,560",
+                "300": "9000,4500"
+              },
+              "fname": "",
+              "fkey": "Timer On",
+              "fid": 9
+            },
+            {
+              "fname": "",
+              "fkey": "Timer Off",
+              "fid": 10
+            },
+            {
+              "fname": "",
+              "fkey": "Light",
+              "fid": 11
+            },
+            {
+              "fname": "",
+              "fkey": "Aux Heat",
+              "fid": 12
+            },
+            {
+              "fname": "",
+              "fkey": "Dry",
+              "fid": 15
+            },
+            {
+              "fname": "",
+              "fkey": "lr_wind_mode",
+              "fid": 21
+            },
+            {
+              "fname": "",
+              "fkey": "sleep",
+              "fid": 22
+            },
+            {
+              "fname": "",
+              "fkey": "E Share",
+              "fid": 36
+            },
+            {
+              "fname": "",
+              "fkey": "mute",
+              "fid": 106
+            }
+          ],
+          "1012": "060508014D5001060508044D50040C0508000C10094D50005458090F0204010508034A4C014D5003808401060508024D5002",
+          "303": "4&640,20000|8&640,40000,9000,4500|13&640,20000",
+          "1505": "S&0,2,3",
+          "302": "640,1660",
+          "1509": "4&3|13&3",
+          "1507": "0,1"
+        },
+        "frequency": 38000,
+        "type": 2,
+        "source": "kk",
+        "brand": "72",
+        "order": 4,
+        "device": 3
+      },
+      {
+        "_id": "72_2667",
+        "key": {
+          "1001": "0002010A",
+          "1013": "00030204010302040203020403",
+          "1010": "030105040306050503070509",
+          "1002": "09190020500205200050",
+          "1502": "S&0",
+          "300": "9010,4490",
+          "1501": "S&0",
+          "1015": "0300020003000201",
+          "1008": "0505100C0103",
+          "1503": "NA",
+          "1003": "020101",
+          "301": "630,588",
+          "1004": "040009050504000C0500",
+          "1504": "NA",
+          "306": "1",
+          "305": "197",
+          "303": "4&630,20000",
+          "1505": "NA",
+          "302": "630,1660",
+          "1509": "4&3"
+        },
+        "frequency": 38690,
+        "type": 2,
+        "source": "kk",
+        "brand": "72",
+        "order": 4,
+        "device": 3
+      },
+      {
+        "_id": "kk_3_72_2969",
+        "key": {
+          "1001": "00020041",
+          "1518": "if(exts~=nil) then\nif(power==1) then\ntiming_on=exts[9]; \nif((timing_on~=nil)and(timing_on>0) and (timing_on<=1440))then\nif (timing_on<600)  then\nif (timing_on%60==0) then\nbytes[2]=bytes[2]+0x80;\nelse \nbytes[2]=bytes[2]+0x90;\nend\nbytes[3]=bytes[3]+(math.floor(timing_on\/60));\nelseif (timing_on>600 and timing_on<1200)  then\nif (timing_on%60==0) then\nbytes[2]=bytes[2]+0xA0;\nelse \nbytes[2]=bytes[2]+0xB0;\nend\nbytes[3]=bytes[3]+(math.floor(timing_on\/60))-10;\nelseif (timing_on>1200 and timing_on<=1440)  then\nif (timing_on%60==0) then\nbytes[2]=bytes[2]+0xC0;\nelse \nbytes[2]=bytes[2]+0xD0;\nend\nbytes[3]=bytes[3]+(math.floor(timing_on\/60))-20;\nend\nend\nelseif(power==0) then\ntiming_off=exts[10]; \nif((timing_off~=nil)and(timing_off>0) and (timing_off<=1440))then\nif (timing_off<600)  then\nif (timing_off%60==0) then\nbytes[2]=bytes[2]+0x80;\nelse \nbytes[2]=bytes[2]+0x90;\nend\nbytes[3]=bytes[3]+(math.floor(timing_off\/60));\nelseif (timing_off>600 and timing_off<1200)  then\nif (timing_off%60==0) then\nbytes[2]=bytes[2]+0xA0;\nelse \nbytes[2]=bytes[2]+0xB0;\nend\nbytes[3]=bytes[3]+(math.floor(timing_off\/60))-10;\nelseif (timing_off>1200 and timing_off<=1440)  then\nif (timing_off%60==0) then\nbytes[2]=bytes[2]+0xC0;\nelse \nbytes[2]=bytes[2]+0xD0;\nend\nbytes[3]=bytes[3]+(math.floor(timing_off\/60))-20;\nend\nend\nend\nend",
+          "1013": "03020400030204010302040203020403",
+          "1002": "054900005002",
+          "300": "9000,4500",
+          "1015": "0301020103010200",
+          "1515": "11|0-1|2|CHAFD@14|0-2|0|CHAFD@18|0-1|0|CHAFD@26|0-1|2|CHAFD@33|0-1|2|CHAFD@22|0-1|0|CHAFD@9|0-1440,30|1|CHAFD@10|0-1440,30|0|CHAFD",
+          "1003": "020101",
+          "301": "600,590",
+          "306": "1",
+          "305": "112",
+          "1506": "0,1",
+          "1017": "050B00121300@050B01121301@050E001E2000@050E011E2001@050E021E2002@051200101100@051201101101@051A00131400@051A01131401@0521001D1E00@0521011D1E01@051600000100@051601000101",
+          "888888": [
+            {
+              "fname": "",
+              "fkey": "Timer On",
+              "fid": 9
+            },
+            {
+              "fname": "",
+              "fkey": "Timer Off",
+              "fid": 10
+            },
+            {
+              "fname": "",
+              "fkey": "Light",
+              "fid": 11
+            },
+            {
+              "fname": "",
+              "fkey": "Air Change",
+              "fid": 14
+            },
+            {
+              "fname": "",
+              "fkey": "ECO",
+              "fid": 18
+            },
+            {
+              "fname": "",
+              "fkey": "lr_wind_mode",
+              "fid": 21
+            },
+            {
+              "fname": "",
+              "fkey": "sleep",
+              "fid": 22
+            },
+            {
+              "fname": "",
+              "fkey": "Body Feel",
+              "fid": 26
+            },
+            {
+              "fname": "",
+              "fkey": "CO Alarm",
+              "fid": 33
+            }
+          ],
+          "1012": "0305080103050804030508000305080303050802",
+          "302": "600,1680",
+          "1509": "-1&3"
+        },
+        "frequency": 38000,
+        "type": 2,
+        "source": "kk",
+        "brand": "72",
+        "order": 5,
+        "device": 3
+      },
+      {
+        "_id": "72_2582",
+        "key": {
+          "1001": "000400400940",
+          "1518": "if(exts~=nil) then\nif (power==0) then\nlf=exts[21]; \nif (lf ==1) then\nbytes[6]=(bytes[6]&0x0F )+ 0x10 ;\nif (functionId==21) then \nbytes[1]=(bytes[1]&0xBF) + 0x40 ;\nbytes[10]=(bytes[10]&0xBF) + 0x40 ;\nend\nelseif (lf ==2) then\nbytes[6]=(bytes[6]&0x0F);\nif (functionId==21) then \nbytes[1]=(bytes[1]&0xBF);\nbytes[10]=(bytes[10]&0xBF);\nend\nend\nbytes[9]= 0xA0+(((bytes[1]&0x0F)+ (bytes[2]&0x0F) + ( bytes[3]&0x0F) +( bytes[4]&0x0F) +  ((bytes[7]&0xF0)>>4) + ((bytes[6]&0xF0)>>4) )<<4) ;\nend\nif(power==1) then\ntiming_on=exts[9]; \nif((timing_on~=nil)and(timing_on>0) and (timing_on<=1440))then\nbytes1={};\nif (timing_on<600)  then\nif (timing_on%60==0) then\nbytes[2]=bytes[2]+0x80;\nelse \nbytes[2]=bytes[2]+0x90;\nend\nbytes[3]=bytes[3]+(math.floor(timing_on\/60));\nelseif (timing_on>600 and timing_on<1200)  then\nif (timing_on%60==0) then\nbytes[2]=bytes[2]+0xA0;\nelse \nbytes[2]=bytes[2]+0xB0;\nend\nbytes[3]=bytes[3]+(math.floor(timing_on\/60))-10;\nelseif (timing_on>1200 and timing_on<=1440)  then\nif (timing_on%60==0) then\nbytes[2]=bytes[2]+0xC0;\nelse \nbytes[2]=bytes[2]+0xD0;\nend\nbytes[3]=bytes[3]+(math.floor(timing_on\/60))-20;\nend\nbytes1[1]=bytes[1];\nbytes1[2]=bytes[2];\nbytes1[3]=bytes[3];\nbytes1[4]=bytes[4];\nbytes1[5]=bytes[5];\nbytes1[6]=bytes[6];\nbytes1[7]=bytes[7];\nbytes1[8]=bytes[8];\nbytes1[9]= 0xC0+(((bytes1[1]&0x0F)+ (bytes1[2]&0x0F) + ( bytes1[3]&0x0F) +( bytes1[4]&0x0F) +  ((bytes1[6]&0xF0)>>4) )<<4) ;\nbytes1[10]=bytes[1];\nbytes1[11]=bytes[2];\nbytes1[12]=bytes[3];\nbytes1[13]=bytes[4]+0x10;;\nbytes1[14]=bytes[5];\nbytes1[15]=(timing_on&0xFF);\nbytes1[16]=((timing_on&0xF00)>>8);\nbytes1[17]=0;\nbytes1[18]= (bytes1[10]&0x0F) + ( bytes1[11]&0x0F) +   (bytes1[12]&0x0F) +   (bytes1[13]&0x0F) +  ((bytes1[15]&0xF0)>>4);\nbytes1[18]=((0x0A+(bytes1[18]&0x0F))<<4)+0x02;\nbytes1[19]=bytes[1];\nbytes1[20]=bytes[2];\nbytes1[21]=bytes[3];\nbytes1[22]=bytes[4]+0x20;\nbytes1[23]=bytes[5];\nbytes1[24]=bytes[15];\nbytes1[25]=bytes[16];\nbytes1[26]=bytes[17];\nbytes1[27]=bytes[18];\nbytes1[27]=(bytes1[27]&0x0F)+(( 0x0A+(bytes1[19]&0x0F) + ( bytes1[20]&0x0F) +   (bytes1[21]&0x0F) +   (bytes1[22]&0x0F) +  ((bytes1[24]&0xF0)>>4) +   ((bytes1[26]&0xF0)>>4))<<4) ;\nbytes=bytes1;\nreturn;\nend\nelseif(power==0) then\ntiming_off=exts[10]; \nif((timing_off~=nil)and(timing_off>0) and (timing_off<=1440))then\nbytes1={};\nif (timing_off<600)  then\nif (timing_off%60==0) then\nbytes[2]=bytes[2]+0x80;\nelse \nbytes[2]=bytes[2]+0x90;\nend\nbytes[3]=bytes[3]+(math.floor(timing_off\/60));\nelseif (timing_off>600 and timing_off<1200)  then\nif (timing_off%60==0) then\nbytes[2]=bytes[2]+0xA0;\nelse \nbytes[2]=bytes[2]+0xB0;\nend\nbytes[3]=bytes[3]+(math.floor(timing_off\/60))-10;\nelseif (timing_off>1200 and timing_off<=1440)  then\nif (timing_off%60==0) then\nbytes[2]=bytes[2]+0xC0;\nelse \nbytes[2]=bytes[2]+0xD0;\nend\nbytes[3]=bytes[3]+(math.floor(timing_off\/60))-20;\nend\nbytes1[1]=bytes[1];\nbytes1[2]=bytes[2];\nbytes1[3]=bytes[3];\nbytes1[4]=bytes[4];\nbytes1[5]=bytes[5];\nbytes1[6]=bytes[6];\nbytes1[7]=bytes[7];\nbytes1[8]=bytes[8];\nbytes1[9]= 0xC0+(((bytes1[1]&0x0F)+ (bytes1[2]&0x0F) + ( bytes1[3]&0x0F) +( bytes1[4]&0x0F) +  ((bytes1[6]&0xF0)>>4) )<<4) ;\nbytes1[10]=bytes[1];\nbytes1[11]=bytes[2];\nbytes1[12]=bytes[3];\nbytes1[13]=bytes[4]+0x10;;\nbytes1[14]=bytes[5];\nbytes1[15]=0;\nbytes1[16]=((timing_off&0x0F)<<4);\nbytes1[17]=((timing_off&0xFF0)>>4);\nbytes1[18]= (bytes1[10]&0x0F) + ( bytes1[11]&0x0F) +   (bytes1[12]&0x0F) +   (bytes1[13]&0x0F) +  ((bytes1[16]&0xF0)>>4)+  ((bytes1[17]&0xF0)>>4);\nbytes1[18]=((0x0A+(bytes1[18]&0x0F))<<4)+0x01;\nbytes1[19]=bytes[1];\nbytes1[20]=bytes[2];\nbytes1[21]=bytes[3];\nbytes1[22]=bytes[4]+0x20;\nbytes1[23]=bytes[5];\nbytes1[24]=bytes[15];\nbytes1[25]=bytes[16];\nbytes1[26]=bytes[17];\nbytes1[27]=bytes[18];\nbytes1[27]=(bytes1[27]&0x0F)+(( 0x0A+(bytes1[19]&0x0F) + ( bytes1[20]&0x0F) +   (bytes1[21]&0x0F) +   (bytes1[22]&0x0F) +  ((bytes1[24]&0xF0)>>4) +   ((bytes1[26]&0xF0)>>4))<<4) ;\nbytes=bytes1;\nreturn;\nend\nend\nend\nif (functionId==6) then\nbytes[1]=(bytes[1]|0x40);\nbytes[10]=(bytes[10]|0x40);\nelse if (functionId==7) then\nbytes[1]=(bytes[1]&0xBF);\nbytes[10]=(bytes[10]&0xBF);\nend\nend\nret=(( 0x0A+(bytes[10]&0x0F) + ( bytes[11]&0x0F) +   (bytes[12]&0x0F) +   (bytes[13]&0x0F) +  ((bytes[15]&0xF0)>>4) +   ((bytes[17]&0xF0)>>4))<<4) ;\nbytes[18]=(bytes[18]&0x0F)+ret;",
+          "1013": "090204004A4C00808400090204014A4C01808401090204034A4C03808403090204034A4C03808405",
+          "1002": "12490020500211000050490020700200000030",
+          "1502": "S&0",
+          "300": "9000,4500",
+          "1501": "S&0",
+          "1015": "090102012C3001494A01090102002C3000494A00090102002C3002494A00090102002C3004494A00090102002C3006494A00",
+          "1008": "0905100A010305070A0B",
+          "1515": "8|0-1|0|CH@9|0-1440,30|1|CHAFD@10|0-1440,30|0|CHAFD@11|1,0-1|2|CHAFD@12|1,0-1|0|H@73|0-1|2|CHAFD@21|1-2|0|CHAFD@22|0-2|0|CHD@36|0-5|0|CHAFD@106|0-1|0|CHAFD",
+          "1503": "T|S&0",
+          "1511": "bytes[17]= (byte)( (bytes[9]&0x0F) +  ( bytes[10]&0x0F) +  (bytes[11]&0x0F) +  (bytes[12]&0x0F) +  ((bytes[14]&0xF0)>>>4) +  ((bytes[16]&0xF0)>>>4)); \t  bytes[17]=(byte)(((byte)0x0A+(byte)(bytes[17]&0x0F))<<4);",
+          "1003": "0401010A01",
+          "1522": "if(exts~=nil) then\nif (power==0) then\nlf=exts[21]; \nif (lf ==1) then\nbytes[6]=bit32.band(bytes[6],0x0F )+ 0x10 ;\nif (functionId==21) then \nbytes[1]=bit32.band(bytes[1],0xBF) + 0x40 ;\nbytes[10]=bit32.band(bytes[10],0xBF) + 0x40 ;\nend\nelseif (lf ==2) then\nbytes[6]=bit32.band(bytes[6],0x0F);\nif (functionId==21) then \nbytes[1]=bit32.band(bytes[1],0xBF);\nbytes[10]=bit32.band(bytes[10],0xBF);\nend\nend\nbytes[9]= 0xA0+bit32.lshift((bit32.band(bytes[1],0x0F)+ bit32.band(bytes[2],0x0F) + bit32.band( bytes[3],0x0F) +bit32.band( bytes[4],0x0F) +  bit32.rshift(bit32.band(bytes[7],0xF0),4) + bit32.rshift(bit32.band(bytes[6],0xF0),4) ),4) ;\nend\nif(power==1) then\ntiming_on=exts[9]; \nif((timing_on~=nil)and(timing_on>0) and (timing_on<=1440))then\nbytes1={};\nif (timing_on<600)  then\nif (timing_on%60==0) then\nbytes[2]=bytes[2]+0x80;\nelse \nbytes[2]=bytes[2]+0x90;\nend\nbytes[3]=bytes[3]+(math.floor(timing_on\/60));\nelseif (timing_on>600 and timing_on<1200)  then\nif (timing_on%60==0) then\nbytes[2]=bytes[2]+0xA0;\nelse \nbytes[2]=bytes[2]+0xB0;\nend\nbytes[3]=bytes[3]+(math.floor(timing_on\/60))-10;\nelseif (timing_on>1200 and timing_on<=1440)  then\nif (timing_on%60==0) then\nbytes[2]=bytes[2]+0xC0;\nelse \nbytes[2]=bytes[2]+0xD0;\nend\nbytes[3]=bytes[3]+(math.floor(timing_on\/60))-20;\nend\nbytes1[1]=bytes[1];\nbytes1[2]=bytes[2];\nbytes1[3]=bytes[3];\nbytes1[4]=bytes[4];\nbytes1[5]=bytes[5];\nbytes1[6]=bytes[6];\nbytes1[7]=bytes[7];\nbytes1[8]=bytes[8];\nbytes1[9]= 0xC0+bit32.lshift((bit32.band(bytes1[1],0x0F)+ bit32.band(bytes1[2],0x0F) + bit32.band( bytes1[3],0x0F) +bit32.band( bytes1[4],0x0F) +  bit32.rshift(bit32.band(bytes1[6],0xF0),4) ),4) ;\nbytes1[10]=bytes[1];\nbytes1[11]=bytes[2];\nbytes1[12]=bytes[3];\nbytes1[13]=bytes[4]+0x10;;\nbytes1[14]=bytes[5];\nbytes1[15]=bit32.band(timing_on,0xFF);\nbytes1[16]=bit32.rshift(bit32.band(timing_on,0xF00),8);\nbytes1[17]=0;\nbytes1[18]= bit32.band(bytes1[10],0x0F) + bit32.band( bytes1[11],0x0F) +   bit32.band(bytes1[12],0x0F) +   bit32.band(bytes1[13],0x0F) +  bit32.rshift(bit32.band(bytes1[15],0xF0),4);\nbytes1[18]=bit32.lshift((0x0A+bit32.band(bytes1[18],0x0F)),4)+0x02;\nbytes1[19]=bytes[1];\nbytes1[20]=bytes[2];\nbytes1[21]=bytes[3];\nbytes1[22]=bytes[4]+0x20;\nbytes1[23]=bytes[5];\nbytes1[24]=bytes[15];\nbytes1[25]=bytes[16];\nbytes1[26]=bytes[17];\nbytes1[27]=bytes[18];\nbytes1[27]=bit32.band(bytes1[27],0x0F)+bit32.lshift(( 0x0A+bit32.band(bytes1[19],0x0F) + bit32.band( bytes1[20],0x0F) +   bit32.band(bytes1[21],0x0F) +   bit32.band(bytes1[22],0x0F) +  bit32.rshift(bit32.band(bytes1[24],0xF0),4) +   bit32.rshift(bit32.band(bytes1[26],0xF0),4)),4) ;\nbytes=bytes1;\nreturn;\nend\nelseif(power==0) then\ntiming_off=exts[10]; \nif((timing_off~=nil)and(timing_off>0) and (timing_off<=1440))then\nbytes1={};\nif (timing_off<600)  then\nif (timing_off%60==0) then\nbytes[2]=bytes[2]+0x80;\nelse \nbytes[2]=bytes[2]+0x90;\nend\nbytes[3]=bytes[3]+(math.floor(timing_off\/60));\nelseif (timing_off>600 and timing_off<1200)  then\nif (timing_off%60==0) then\nbytes[2]=bytes[2]+0xA0;\nelse \nbytes[2]=bytes[2]+0xB0;\nend\nbytes[3]=bytes[3]+(math.floor(timing_off\/60))-10;\nelseif (timing_off>1200 and timing_off<=1440)  then\nif (timing_off%60==0) then\nbytes[2]=bytes[2]+0xC0;\nelse \nbytes[2]=bytes[2]+0xD0;\nend\nbytes[3]=bytes[3]+(math.floor(timing_off\/60))-20;\nend\nbytes1[1]=bytes[1];\nbytes1[2]=bytes[2];\nbytes1[3]=bytes[3];\nbytes1[4]=bytes[4];\nbytes1[5]=bytes[5];\nbytes1[6]=bytes[6];\nbytes1[7]=bytes[7];\nbytes1[8]=bytes[8];\nbytes1[9]= 0xC0+bit32.lshift((bit32.band(bytes1[1],0x0F)+ bit32.band(bytes1[2],0x0F) + bit32.band( bytes1[3],0x0F) +bit32.band( bytes1[4],0x0F) +  bit32.rshift(bit32.band(bytes1[6],0xF0),4) ),4) ;\nbytes1[10]=bytes[1];\nbytes1[11]=bytes[2];\nbytes1[12]=bytes[3];\nbytes1[13]=bytes[4]+0x10;;\nbytes1[14]=bytes[5];\nbytes1[15]=0;\nbytes1[16]=bit32.lshift(bit32.band(timing_off,0x0F),4);\nbytes1[17]=bit32.rshift(bit32.band(timing_off,0xFF0),4);\nbytes1[18]= bit32.band(bytes1[10],0x0F) + bit32.band( bytes1[11],0x0F) +   bit32.band(bytes1[12],0x0F) +   bit32.band(bytes1[13],0x0F) +  bit32.rshift(bit32.band(bytes1[16],0xF0),4)+  bit32.rshift(bit32.band(bytes1[17],0xF0),4);\nbytes1[18]=bit32.lshift((0x0A+bit32.band(bytes1[18],0x0F)),4)+0x01;\nbytes1[19]=bytes[1];\nbytes1[20]=bytes[2];\nbytes1[21]=bytes[3];\nbytes1[22]=bytes[4]+0x20;\nbytes1[23]=bytes[5];\nbytes1[24]=bytes[15];\nbytes1[25]=bytes[16];\nbytes1[26]=bytes[17];\nbytes1[27]=bytes[18];\nbytes1[27]=bit32.band(bytes1[27],0x0F)+bit32.lshift(( 0x0A+bit32.band(bytes1[19],0x0F) + bit32.band( bytes1[20],0x0F) +   bit32.band(bytes1[21],0x0F) +   bit32.band(bytes1[22],0x0F) +  bit32.rshift(bit32.band(bytes1[24],0xF0),4) +   bit32.rshift(bit32.band(bytes1[26],0xF0),4)),4) ;\nbytes=bytes1;\nreturn;\nend\nend\nend\nif (functionId==6) then\nbytes[1]=bit32.bor(bytes[1],0x40);\nbytes[10]=bit32.bor(bytes[10],0x40);\nelse if (functionId==7) then\nbytes[1]=bit32.band(bytes[1],0xBF);\nbytes[10]=bit32.band(bytes[10],0xBF);\nend\nend\nret=bit32.lshift(( 0x0A+bit32.band(bytes[10],0x0F) + bit32.band( bytes[11],0x0F) +   bit32.band(bytes[12],0x0F) +   bit32.band(bytes[13],0x0F) +  bit32.rshift(bit32.band(bytes[15],0xF0),4) +   bit32.rshift(bit32.band(bytes[17],0xF0),4)),4) ;\nbytes[18]=bit32.band(bytes[18],0x0F)+ret;",
+          "301": "640,560",
+          "1504": "S&0",
+          "306": "1",
+          "305": "482",
+          "1517": "8@106&1-2*0|106@8&1-1*0|5@8&1-1*0|5@106&1-2*0|22@106&0-2*1|1,2,3,4,8,12,15,22,106@36&1-5*0",
+          "1506": "0,1,2,3,4",
+          "1017": "0808001314005B5C00@0808011314015B5C01@080B001213005A5B00@080B011213015A5B01@080C00101101585901@080C01101100585900@051000343800@051001343801@051002343802@051003343803@054900313200@054901313201@056A00707400@056A01707408@0B1600000100484900777800@0B1601000101484901777800@0B1602000100484900777801@0524008C9000@0524018C9001@0524028C9002@0524038C9003@0524048C9004@0524058C9005",
+          "1516": "9@30-1440,30&9|10@30-1440,30&9",
+          "888888": [
+            {
+              "fname": "",
+              "fkey": "TURBO",
+              "fid": 8
+            },
+            {
+              "exts": {
+                "1509": "4&3|13&3|22&3",
+                "306": "1",
+                "303": "4&640,20000|8&640,40000,9000,4500|13&640,20000|17&640,40000,9000,4500|22&640,20000",
+                "302": "640,1660",
+                "301": "640,560",
+                "300": "9000,4500"
+              },
+              "fname": "",
+              "fkey": "Timer On",
+              "fid": 9
+            },
+            {
+              "fname": "",
+              "fkey": "Timer Off",
+              "fid": 10
+            },
+            {
+              "fname": "",
+              "fkey": "Light",
+              "fid": 11
+            },
+            {
+              "fname": "",
+              "fkey": "Aux Heat",
+              "fid": 12
+            },
+            {
+              "fname": "",
+              "fkey": "lr_wind_mode",
+              "fid": 21
+            },
+            {
+              "fname": "",
+              "fkey": "sleep",
+              "fid": 22
+            },
+            {
+              "fname": "",
+              "fkey": "E Share",
+              "fid": 36
+            },
+            {
+              "fname": "",
+              "fkey": "WiFi Switch",
+              "fid": 73
+            },
+            {
+              "fname": "",
+              "fkey": "mute",
+              "fid": 106
+            }
+          ],
+          "1012": "060508014D5001060508044D50040C0508000C10094D50005458090F0204010508034A4C014D5003808401060508024D5002",
+          "303": "4&640,20000|8&640,40000,9000,4500|13&640,20000",
+          "1505": "S&0,2,3",
+          "302": "640,1660",
+          "1509": "4&3|13&3",
+          "1507": "0,1"
+        },
+        "frequency": 38000,
+        "type": 2,
+        "source": "kk",
+        "brand": "72",
+        "order": 9,
+        "device": 3
+      },
+      {
+        "_id": "72_2587",
+        "key": {
+          "1001": "00020D30",
+          "1005": "0210AF02103F02105F02107F",
+          "1518": "if(power==1) then\nbytes[14]=(bytes[14]&0xFE);\nend\nif(exts~=nil) then\nif(power==1) then\ntiming_on=exts[9]; \nif((timing_on~=nil)and(timing_on>0) and (timing_on<=1440))then\nbytes[14]=(bytes[14]|0x02);\nif (timing_on==60) then\nbytes[19]=0x3C;\nbytes[20]=0;\nelseif(timing_on==120) then\nbytes[19]=0x78;\nbytes[20]=0;\nelseif(timing_on==180) then\nbytes[19]=0xB4;\nbytes[20]=0;\nelseif(timing_on==240) then\nbytes[19]=0xF0;\nbytes[20]=0;\nelseif(timing_on==300) then\nbytes[19]=0x2C;\nbytes[20]=0x01;\nelseif(timing_on==360) then\nbytes[19]=0x68;\nbytes[20]=0x01;\nelseif(timing_on==420) then\nbytes[19]=0xA4;\nbytes[20]=0x01;\nelseif(timing_on==480) then\nbytes[19]=0xE0;\nbytes[20]=0x01;\nelseif(timing_on==540) then\nbytes[19]=0x1C;\nbytes[20]=0x02;\nelseif(timing_on==600) then\nbytes[19]=0x58;\nbytes[20]=0x02;\nelseif(timing_on==660) then\nbytes[19]=0x94;\nbytes[20]=0x02;\nelseif(timing_on==720) then\nbytes[19]=0xD0;\nbytes[20]=0x02;\nend\nend\nelseif(power==0) then\ntiming_off=exts[10]; \nif((timing_off~=nil)and(timing_off>0) and (timing_off<=1440))then\nbytes[14]=(bytes[14]|0x04);\nif (timing_off==60) then\nbytes[20]=0xC0;\nbytes[21]=0x03;\nelseif(timing_off==120) then\nbytes[20]=0x80;\nbytes[21]=0x07;\nelseif(timing_off==180) then\nbytes[20]=0x40;\nbytes[21]=0x0B;\nelseif(timing_off==240) then\nbytes[20]=0;\nbytes[21]=0x0F;\nelseif(timing_off==300) then\nbytes[20]=0xC0;\nbytes[21]=0x12;\nelseif(timing_off==360) then\nbytes[20]=0x80;\nbytes[21]=0x16;\nelseif(timing_off==420) then\nbytes[20]=0x40;\nbytes[21]=0x1A;\nelseif(timing_off==480) then\nbytes[20]=0;\nbytes[21]=0x1E;\nelseif(timing_off==540) then\nbytes[20]=0xC0;\nbytes[21]=0x21;\nelseif(timing_off==600) then\nbytes[20]=0x80;\nbytes[21]=0x25;\nelseif(timing_off==660) then\nbytes[20]=0x40;\nbytes[21]=0x29;\nelseif(timing_off==720) then\nbytes[20]=0;\nbytes[21]=0x2D;\nend\nend\nend\nend\n\nbytes[27]=0;\nfor i=9,26,1 do\nbytes[27]=bytes[27]+bytes[i];\nend",
+          "1002": "1B0220E004000000060220E00400312080AF00000660000080000672",
+          "300": "3490,1740",
+          "1015": "0384880F0384880103848802038488030384880403848805",
+          "1008": "0401081A1A",
+          "1515": "9|60-1440,60|1|CHAFD@10|60-1440,60|0|CHAFD",
+          "1503": "T",
+          "1003": "020E02",
+          "1522": "if(power==1) then\nbytes[14]=bit32.band(bytes[14],0xFE);\nend\nif(exts~=nil) then\nif(power==1) then\ntiming_on=exts[9]; \nif((timing_on~=nil)and(timing_on>0) and (timing_on<=1440))then\nbytes[14]=bit32.bor(bytes[14],0x02);\nif (timing_on==60) then\nbytes[19]=0x3C;\nbytes[20]=0;\nelseif(timing_on==120) then\nbytes[19]=0x78;\nbytes[20]=0;\nelseif(timing_on==180) then\nbytes[19]=0xB4;\nbytes[20]=0;\nelseif(timing_on==240) then\nbytes[19]=0xF0;\nbytes[20]=0;\nelseif(timing_on==300) then\nbytes[19]=0x2C;\nbytes[20]=0x01;\nelseif(timing_on==360) then\nbytes[19]=0x68;\nbytes[20]=0x01;\nelseif(timing_on==420) then\nbytes[19]=0xA4;\nbytes[20]=0x01;\nelseif(timing_on==480) then\nbytes[19]=0xE0;\nbytes[20]=0x01;\nelseif(timing_on==540) then\nbytes[19]=0x1C;\nbytes[20]=0x02;\nelseif(timing_on==600) then\nbytes[19]=0x58;\nbytes[20]=0x02;\nelseif(timing_on==660) then\nbytes[19]=0x94;\nbytes[20]=0x02;\nelseif(timing_on==720) then\nbytes[19]=0xD0;\nbytes[20]=0x02;\nend\nend\nelseif(power==0) then\ntiming_off=exts[10]; \nif((timing_off~=nil)and(timing_off>0) and (timing_off<=1440))then\nbytes[14]=bit32.bor(bytes[14],0x04);\nif (timing_off==60) then\nbytes[20]=0xC0;\nbytes[21]=0x03;\nelseif(timing_off==120) then\nbytes[20]=0x80;\nbytes[21]=0x07;\nelseif(timing_off==180) then\nbytes[20]=0x40;\nbytes[21]=0x0B;\nelseif(timing_off==240) then\nbytes[20]=0;\nbytes[21]=0x0F;\nelseif(timing_off==300) then\nbytes[20]=0xC0;\nbytes[21]=0x12;\nelseif(timing_off==360) then\nbytes[20]=0x80;\nbytes[21]=0x16;\nelseif(timing_off==420) then\nbytes[20]=0x40;\nbytes[21]=0x1A;\nelseif(timing_off==480) then\nbytes[20]=0;\nbytes[21]=0x1E;\nelseif(timing_off==540) then\nbytes[20]=0xC0;\nbytes[21]=0x21;\nelseif(timing_off==600) then\nbytes[20]=0x80;\nbytes[21]=0x25;\nelseif(timing_off==660) then\nbytes[20]=0x40;\nbytes[21]=0x29;\nelseif(timing_off==720) then\nbytes[20]=0;\nbytes[21]=0x2D;\nend\nend\nend\nend\n\nbytes[27]=0;\nfor i=9,26,1 do\nbytes[27]=bytes[27]+bytes[i];\nend",
+          "301": "411,474",
+          "1004": "020D31020D41040D010EE0020D61020D21",
+          "1504": "T",
+          "306": "1",
+          "305": "237",
+          "1506": "0,1,2,3,4,5",
+          "888888": [
+            {
+              "fname": "",
+              "fkey": "Timer On",
+              "fid": 9
+            },
+            {
+              "fname": "",
+              "fkey": "Timer Off",
+              "fid": 10
+            }
+          ],
+          "303": "7&411,10010,3490,1740",
+          "302": "411,1250"
+        },
+        "frequency": 38000,
+        "type": 2,
+        "source": "kk",
+        "brand": "72",
+        "order": 30,
+        "device": 3
+      },
+      {
+        "_id": "72_2132",
+        "key": {
+          "1001": "00020001",
+          "1518": "if(exts~=nil) then\ntiming_on=exts[9] \ntiming_off=exts[10] \nbytes1={}  \nfor i=1,9,1 do bytes1[i]=bytes[i] bytes1[i+9]=bytes[i] end \nbytes1[13]=0x60 \nif(((timing_on==0)or(timing_on==nil))and((timing_off==0) or(timing_off==nil)))then return  end\nif((timing_on~=nil)and(timing_on>0)) then\nif(timing_on<600) then \n\tif(timing_on%60==0) then \n\t\tbytes1[2]=(bytes1[2]&0x0F)+0x80 \n\t\telse bytes1[2]=(bytes1[2]&0x0F)+0x90 \n\t\t\tend \nelseif((timing_on>=600)and(timing_on<1200)) then \n\tif(timing_on%60==0) then\n\t\tbytes1[2]=(bytes[2]&0x0F)+0xA0 \n\t\telse bytes1[2]=(bytes1[2]&0x0F)+0xB0  \n\t\t\tend\nelseif(timing_on>=1200) then \n\tif(timing_on%60==0) then \n\t\tbytes[2]=(bytes1[2]&0x0F)+0xC0  \n\t\telse bytes1[2]=(bytes1[2]&0x0F)+0xD0 \n\t\t\tend \nend\nbytes1[3]=bytes1[3]+math.floor((timing_on\/60)%10) \nbytes1[9]=(((bytes1[1]&0x0F)+(bytes1[2]&0x0F)+(bytes1[3]&0x0F)+(bytes1[4]&0x0F)+(bytes1[6]>>4)+0x0C)<<4) \nbytes1[11]=bytes1[2] \nbytes1[12]=bytes1[3] \nbytes1[15]=(timing_on&0xFF) \nbytes1[16]=((timing_on>>8)&0x0F) \nbytes1[17]=0 \nbytes1[18]=(((bytes1[9]>>4)+(bytes1[15]>>4)+(bytes1[16]>>4)+(bytes1[17]>>4)+0x0D)<<4)+0x02 \nelseif((timing_off~=nil)and(timing_off>0))then\n\tif(timing_off<600) then \n\t\tif(timing_off%60==0) then \n\t\t\tbytes1[2]=(bytes1[2]&0x0F)+0x80  \n\t\t\telse \n\t\t\tbytes1[2]=(bytes1[2]&0x0F)+0x90 \n\t\t\tend \n\telseif((timing_off>=600)and(timing_off<1200)) then \n\t\tif(timing_off%60==0) then \n\t\t\tbytes1[2]=(bytes1[2]&0x0F)+0xA0  \n\t\t\telse bytes1[2]=(bytes1[2]&0x0F)+0xB0 \n\t\t\t\tend \n\telseif((timing_off)>=1200) then \n\t\tif(timing_off%60==0) then \n\t\t\tbytes1[2]=(bytes1[2]&0x0F)+0xC0 \n\t\t\telse bytes1[2]=(bytes1[2]&0x0F)+0xD0 \n\t\t\t\tend \n\tend\n\tbytes1[3]=bytes1[3]+math.floor((timing_off\/60)%10) \n\tbytes1[9]=(((bytes1[1]&0x0F)+(bytes1[2]&0x0F)+(bytes1[3]&0x0F)+(bytes1[4]&0x0F)+(bytes1[6]>>4)+0x0C)<<4) \n\tbytes1[11]=bytes1[2] \n\tbytes1[12]=bytes1[3] \n\tbytes1[16]=((timing_off&0x0F)<<4) \n\tbytes1[17]=(timing_off>>4) \n\tbytes1[15]=0 \n\tbytes1[18]=(((bytes1[9]>>4)+(bytes1[15]>>4)+(bytes1[16]>>4)+(bytes1[17]>>4)+0x0D)<<4)+0x01 \nend\nbytes=bytes1 \nend",
+          "1013": "03020400030204010302040203020403",
+          "1002": "09490020500201000060",
+          "300": "9000,4500",
+          "1015": "060102012C3001060102002C3002060102002C3003060102002C3004060102002C3005060102002C3006060102012C3007060102012C3009060102012C300B060102002C3000",
+          "1008": "0705100A01030507",
+          "1515": "13|0-1|0|CHAFD@14|0-1|0|CHAFD@15|0-1|0|CD@16|0-3|0|CHAFD@08|0-1|0|CH@11|1,0-1|2|CHAFD@22|0-1|0|CHD@09|0-1440,30|1|CHAFD@10|0-1440,30|0|CHAFD",
+          "1503": "T",
+          "1003": "020101",
+          "1522": "if(exts~=nil) then\ntiming_on=exts[9] \ntiming_off=exts[10] \nbytes1={}  \nfor i=1,9,1 do bytes1[i]=bytes[i] bytes1[i+9]=bytes[i] end \nbytes1[13]=0x60 \nif(((timing_on==0)or(timing_on==nil))and((timing_off==0) or(timing_off==nil)))then return  end\nif((timing_on~=nil)and(timing_on>0)) then\nif(timing_on<600) then \n\tif(timing_on%60==0) then \n\t\tbytes1[2]=bit32.band(bytes1[2],0x0F)+0x80 \n\t\telse bytes1[2]=bit32.band(bytes1[2],0x0F)+0x90 \n\t\t\tend \nelseif((timing_on>=600)and(timing_on<1200)) then \n\tif(timing_on%60==0) then\n\t\tbytes1[2]=bit32.band(bytes[2],0x0F)+0xA0 \n\t\telse bytes1[2]=bit32.band(bytes1[2],0x0F)+0xB0  \n\t\t\tend\nelseif(timing_on>=1200) then \n\tif(timing_on%60==0) then \n\t\tbytes[2]=bit32.band(bytes1[2],0x0F)+0xC0  \n\t\telse bytes1[2]=bit32.band(bytes1[2],0x0F)+0xD0 \n\t\t\tend \nend\nbytes1[3]=bytes1[3]+math.floor((timing_on\/60)%10) \nbytes1[9]=bit32.lshift((bit32.band(bytes1[1],0x0F)+bit32.band(bytes1[2],0x0F)+bit32.band(bytes1[3],0x0F)+bit32.band(bytes1[4],0x0F)+bit32.rshift(bytes1[6],4)+0x0C),4) \nbytes1[11]=bytes1[2] \nbytes1[12]=bytes1[3] \nbytes1[15]=bit32.band(timing_on,0xFF) \nbytes1[16]=bit32.band(bit32.rshift(timing_on,8),0x0F) \nbytes1[17]=0 \nbytes1[18]=bit32.lshift((bit32.rshift(bytes1[9],4)+bit32.rshift(bytes1[15],4)+bit32.rshift(bytes1[16],4)+bit32.rshift(bytes1[17],4)+0x0D),4)+0x02 \nelseif((timing_off~=nil)and(timing_off>0))then\n\tif(timing_off<600) then \n\t\tif(timing_off%60==0) then \n\t\t\tbytes1[2]=bit32.band(bytes1[2],0x0F)+0x80  \n\t\t\telse \n\t\t\tbytes1[2]=bit32.band(bytes1[2],0x0F)+0x90 \n\t\t\tend \n\telseif((timing_off>=600)and(timing_off<1200)) then \n\t\tif(timing_off%60==0) then \n\t\t\tbytes1[2]=bit32.band(bytes1[2],0x0F)+0xA0  \n\t\t\telse bytes1[2]=bit32.band(bytes1[2],0x0F)+0xB0 \n\t\t\t\tend \n\telseif((timing_off)>=1200) then \n\t\tif(timing_off%60==0) then \n\t\t\tbytes1[2]=bit32.band(bytes1[2],0x0F)+0xC0 \n\t\t\telse bytes1[2]=bit32.band(bytes1[2],0x0F)+0xD0 \n\t\t\t\tend \n\tend\n\tbytes1[3]=bytes1[3]+math.floor((timing_off\/60)%10) \n\tbytes1[9]=bit32.lshift((bit32.band(bytes1[1],0x0F)+bit32.band(bytes1[2],0x0F)+bit32.band(bytes1[3],0x0F)+bit32.band(bytes1[4],0x0F)+bit32.rshift(bytes1[6],4)+0x0C),4) \n\tbytes1[11]=bytes1[2] \n\tbytes1[12]=bytes1[3] \n\tbytes1[16]=bit32.lshift(bit32.band(timing_off,0x0F),4) \n\tbytes1[17]=bit32.rshift(timing_off,4) \n\tbytes1[15]=0 \n\tbytes1[18]=bit32.lshift((bit32.rshift(bytes1[9],4)+bit32.rshift(bytes1[15],4)+bit32.rshift(bytes1[16],4)+bit32.rshift(bytes1[17],4)+0x0D),4)+0x01 \nend\nbytes=bytes1 \nend",
+          "301": "640,560",
+          "306": "1",
+          "305": "197",
+          "1517": "2@22&1-1*0",
+          "1506": "0,1,2,3,4,5,6,7,8,9",
+          "1017": "050D00111200@050D01111201@050E001F2000@050E011F2001@050F00101100@050F01101101@051000343800@051001343801@051002343802@051003343803@050800131400@050801131401@050B00121300@050B01121301@051600000100@051601000101",
+          "1516": "10@30-1440,30&9|9@30-1440,30&9",
+          "888888": [
+            {
+              "fname": "",
+              "fkey": "TURBO",
+              "fid": 8
+            },
+            {
+              "exts": {
+                "1509": "4&3|13&3",
+                "306": "1",
+                "305": "482",
+                "1002": "12419A20500211200080419A2060021E000062",
+                "303": "4&640,20000|8&640,40000,9000,4500|13&640,20000",
+                "302": "640,1680",
+                "301": "640,560",
+                "300": "9000,4500"
+              },
+              "fname": "",
+              "fkey": "Timer On",
+              "fid": 9
+            },
+            {
+              "fname": "",
+              "fkey": "Timer Off",
+              "fid": 10
+            },
+            {
+              "fname": "",
+              "fkey": "Light",
+              "fid": 11
+            },
+            {
+              "fname": "",
+              "fkey": "Health",
+              "fid": 13
+            },
+            {
+              "fname": "",
+              "fkey": "Air Change",
+              "fid": 14
+            },
+            {
+              "fname": "",
+              "fkey": "Dry",
+              "fid": 15
+            },
+            {
+              "fname": "",
+              "fkey": "Show Temp",
+              "fid": 16
+            },
+            {
+              "fname": "",
+              "fkey": "sleep",
+              "fid": 22
+            }
+          ],
+          "1012": "0305080103050804030508000305080303050802",
+          "303": "4&640,20000",
+          "302": "640,1680",
+          "1509": "4&3"
+        },
+        "frequency": 38000,
+        "type": 2,
+        "source": "kk",
+        "brand": "72",
+        "order": 40,
+        "device": 3
+      },
+      {
+        "_id": "kk_3_72_4795",
+        "key": {
+          "1001": "00020001",
+          "1518": "if(exts~=nil) then\nif(power==1) then\ntiming_on=exts[9]; \nif((timing_on~=nil)and(timing_on>0) and (timing_on<=1440))then\nif (timing_on<600)  then\nif (timing_on%60==0) then\nbytes[2]=bytes[2]+0x80;\nelse \nbytes[2]=bytes[2]+0x90;\nend\nbytes[3]=bytes[3]+(math.floor(timing_on\/60));\nelseif (timing_on>600 and timing_on<1200)  then\nif (timing_on%60==0) then\nbytes[2]=bytes[2]+0xA0;\nelse \nbytes[2]=bytes[2]+0xB0;\nend\nbytes[3]=bytes[3]+(math.floor(timing_on\/60))-10;\nelseif (timing_on>1200 and timing_on<=1440)  then\nif (timing_on%60==0) then\nbytes[2]=bytes[2]+0xC0;\nelse \nbytes[2]=bytes[2]+0xD0;\nend\nbytes[3]=bytes[3]+(math.floor(timing_on\/60))-20;\nend\nend\nelseif(power==0) then\ntiming_off=exts[10]; \nif((timing_off~=nil)and(timing_off>0) and (timing_off<=1440))then\nif (timing_off<600)  then\nif (timing_off%60==0) then\nbytes[2]=bytes[2]+0x80;\nelse \nbytes[2]=bytes[2]+0x90;\nend\nbytes[3]=bytes[3]+(math.floor(timing_off\/60));\nelseif (timing_off>600 and timing_off<1200)  then\nif (timing_off%60==0) then\nbytes[2]=bytes[2]+0xA0;\nelse \nbytes[2]=bytes[2]+0xB0;\nend\nbytes[3]=bytes[3]+(math.floor(timing_off\/60))-10;\nelseif (timing_off>1200 and timing_off<=1440)  then\nif (timing_off%60==0) then\nbytes[2]=bytes[2]+0xC0;\nelse \nbytes[2]=bytes[2]+0xD0;\nend\nbytes[3]=bytes[3]+(math.floor(timing_off\/60))-20;\nend\nend\nend\nend",
+          "1013": "03010400030104010301040203010404",
+          "1002": "06090000005602",
+          "300": "9000,4500",
+          "1515": "11|0-1|0|CHAFD@14|0-1|0|CHAFD@21|1-9|0|CHAFD@22|0-1|0|CHD@41|0-1|0|CHAFD@52|0-1|0|CHAFD@64|0-3|0|HA@9|0-1440,30|1|CHAFD@10|0-1440,30|0|CHAFD",
+          "1503": "T",
+          "1003": "020101",
+          "1007": "020456020450020451020452020453020454020455",
+          "301": "610,590",
+          "306": "1",
+          "305": "242",
+          "1506": "0,1,2,3,4,5,6",
+          "1017": "050B00121300@050B01121301@050E001F2000@050E011F2001@051501171C07@051502171C08@051503171C00@051504171C01@051505171C02@051506171C03@051507171C04@051508171C05@051509171C06@051600000100@051601000101@052900111200@052901111201@053400131400@053401131401@0540001C1D00@0540011C1D01@0540021C1D02@0540031C1D03",
+          "888888": [
+            {
+              "fname": "",
+              "fkey": "Timer On",
+              "fid": 9
+            },
+            {
+              "fname": "",
+              "fkey": "Timer Off",
+              "fid": 10
+            },
+            {
+              "fname": "",
+              "fkey": "Light",
+              "fid": 11
+            },
+            {
+              "fname": "",
+              "fkey": "Air Change",
+              "fid": 14
+            },
+            {
+              "fname": "",
+              "fkey": "lr_wind_mode",
+              "fid": 21
+            },
+            {
+              "fname": "",
+              "fkey": "sleep",
+              "fid": 22
+            },
+            {
+              "fname": "",
+              "fkey": "Clean Air",
+              "fid": 41
+            },
+            {
+              "fname": "",
+              "fkey": "Sterilization",
+              "fid": 52
+            },
+            {
+              "fname": "",
+              "fkey": "humidification",
+              "fid": 64
+            }
+          ],
+          "1012": "030408090304080C060408080C10090304080B0304080A",
+          "1505": "S&0,2,3",
+          "302": "610,1610",
+          "1509": "-1&3",
+          "1507": "0,1,2,3,4,5,6,7,8"
+        },
+        "frequency": 37900,
+        "type": 2,
+        "source": "kk",
+        "brand": "72",
+        "order": 45,
+        "device": 3
+      },
+      {
+        "key": {
+          "ud_wind_mode_fix": "tox8lCVn4ynewQesJtKAfADYgJ\/LOzl7dwYxnMZ2fVoceAxS57salrqpkVJDVnAMJ\/v3kgQB27hgt4ztec3hZZj3rRngf7Ip4FRMDEO6zHw=",
+          "ud_wind_mode_swing": "tox8lCVn4ynewQesJtKAfADYgJ\/LOzl7dwYxnMZ2fVp9qQoAJFnR9tOk\/RdgMAKKCisUnRkD4bjeQu3Le0knGpDSBYeaXLsBA8HJANuKyNY=",
+          "fanspeed": "tox8lCVn4ynewQesJtKAfADYgJ\/LOzl7dwYxnMZ2fVqJF5H7Nm2bJGecX7ELexsot\/U7wvx7+ON134arxkWN24p5aKVa6cn6RnIRRWrSnwM=",
+          "temperature_down": "tox8lCVn4ynewQesJtKAfADYgJ\/LOzl7dwYxnMZ2fVq6DBaftfp9S9hKw9bsTTtjnPPMWfBJIuXUYVcZRJ\/91iSeiioWwjbWfxg1A6kQyCY=",
+          "temperature_up": "tox8lCVn4ynewQesJtKAfADYgJ\/LOzl7dwYxnMZ2fVpoJKvYeGDrESRg397vmgHf8O8wra9IZH9zqVworkdaX+W3xKxN1a8nO9XihwMti1g=",
+          "mode": "tox8lCVn4ynewQesJtKAfADYgJ\/LOzl7dwYxnMZ2fVrLNmKE6q9flt8HiijqlYWbyjXOJI2oQCQU95LsUlJGi4ol0968IVOzhSIpmv7S09s=",
+          "power": "tox8lCVn4ynewQesJtKAfADYgJ\/LOzl7dwYxnMZ2fVoB2wa0OvwMQ2GL0IJuPzCwxRj96sRpTjWkZ\/3PdFG9QxQkJFoR8kSCCgSM2vewRDY="
+        },
+        "order": 48,
+        "frequency": 38000,
+        "brand": "72",
+        "device": 3,
+        "_id": "72_682",
+        "source": "kk",
+        "type": 1
+      },
+      {
+        "_id": "72_2632",
+        "key": {
+          "1001": "00020011",
+          "1013": "00030004010300040203000403",
+          "1002": "06190A00805002",
+          "1502": "S&0",
+          "300": "8900,4500",
+          "1501": "S&0",
+          "1503": "NA",
+          "1003": "020101",
+          "1007": "020380020320",
+          "301": "630,591",
+          "1004": "040009010004000C0100",
+          "1504": "NA",
+          "306": "1",
+          "305": "242",
+          "888888": [],
+          "1505": "NA",
+          "302": "538,1630",
+          "1509": "-1&3"
+        },
+        "frequency": 38000,
+        "type": 2,
+        "source": "kk",
+        "brand": "72",
+        "order": 49,
+        "device": 3
+      },
+      {
+        "_id": "72_2622",
+        "key": {
+          "1001": "00020001",
+          "1518": "if(exts~=nil) then\ntiming_on=exts[9] \ntiming_off=exts[10] \nbytes1={}  \nfor i=1,9,1 do bytes1[i]=bytes[i] bytes1[i+9]=bytes[i] end \nbytes1[13]=0x60 \nif(((timing_on==0)or(timing_on==nil))and((timing_off==0) or(timing_off==nil)))then return  end\nif((timing_on~=nil)and(timing_on>0)) then\nif(timing_on<600) then \n\tif(timing_on%60==0) then \n\t\tbytes1[2]=(bytes1[2]&0x0F)+0x80 \n\t\telse bytes1[2]=(bytes1[2]&0x0F)+0x90 \n\t\t\tend \nelseif((timing_on>=600)and(timing_on<1200)) then \n\tif(timing_on%60==0) then\n\t\tbytes1[2]=(bytes[2]&0x0F)+0xA0 \n\t\telse bytes1[2]=(bytes1[2]&0x0F)+0xB0  \n\t\t\tend\nelseif(timing_on>=1200) then \n\tif(timing_on%60==0) then \n\t\tbytes[2]=(bytes1[2]&0x0F)+0xC0  \n\t\telse bytes1[2]=(bytes1[2]&0x0F)+0xD0 \n\t\t\tend \nend\nbytes1[3]=bytes1[3]+math.floor((timing_on\/60)%10) \nbytes1[9]=(((bytes1[1]&0x0F)+(bytes1[2]&0x0F)+(bytes1[3]&0x0F)+(bytes1[4]&0x0F)+(bytes1[6]>>4)+0x0C)<<4)\nbytes1[11]=bytes1[2] \nbytes1[12]=bytes1[3] \nbytes1[15]=(timing_on&0xFF) \nbytes1[16]=((timing_on>>8)&0x0F)\nbytes1[17]=0 \nbytes1[18]=(((bytes1[9]>>4)+(bytes1[15]>>4)+(bytes1[16]>>4)+(bytes1[17]>>4)+0x0D)<<4)+0x02 \nelseif((timing_off~=nil)and(timing_off>0))then\n\tif(timing_off<600) then \n\t\tif(timing_off%60==0) then \n\t\t\tbytes1[2]=(bytes1[2]&0x0F)+0x80  \n\t\t\telse \n\t\t\tbytes1[2]=(bytes1[2]&0x0F)+0x90 \n\t\t\tend \n\telseif((timing_off>=600)and(timing_off<1200)) then \n\t\tif(timing_off%60==0) then \n\t\t\tbytes1[2]=(bytes1[2]&0x0F)+0xA0  \n\t\t\telse bytes1[2]=(bytes1[2]&0x0F)+0xB0 \n\t\t\t\tend \n\telseif((timing_off)>=1200) then \n\t\tif(timing_off%60==0) then \n\t\t\tbytes1[2]=(bytes1[2]&0x0F)+0xC0 \n\t\t\telse bytes1[2]=(bytes1[2]&0x0F)+0xD0 \n\t\t\t\tend \n\tend\n\tbytes1[3]=bytes1[3]+math.floor((timing_off\/60)%10) \n\tbytes1[9]=(((bytes1[1]&0x0F)+(bytes1[2]&0x0F)+(bytes1[3]&0x0F)+(bytes1[4]&0x0F)+(bytes1[6]>>4)+0x0C)<<4) \n\tbytes1[11]=bytes1[2] \n\tbytes1[12]=bytes1[3] \n\tbytes1[16]=((timing_off&0x0F)<<4) \n\tbytes1[17]=(timing_off>>4)\n\tbytes1[15]=0 \n\tbytes1[18]=(((bytes1[9]>>4)+(bytes1[15]>>4)+(bytes1[16]>>4)+(bytes1[17]>>4)+0x0D)<<4)+0x01 \nend\nbytes=bytes1 \nend",
+          "1013": "03020400030204010302040203020403",
+          "1002": "09490020500201200060",
+          "300": "9000,4500",
+          "1015": "060102012C3001060102002C3002060102002C3003060102002C3004060102002C3005060102002C3006060102012C3007060102012C3009060102012C300B060102002C3000",
+          "1008": "0705100C01030507",
+          "1515": "13|0-1|0|CHAFD@14|0-1|0|CHAFD@15|0-1|0|CD@16|0-3|0|CHAFD@08|0-1|0|CH@11|1,0-1|2|CHAFD@22|0-1|0|CHD@26|0-1|0|CHAFD@09|0-1440,30|1|CHAFD@10|0-1440,30|0|CHAFD",
+          "1503": "T",
+          "1003": "020101",
+          "1522": "if(exts~=nil) then\ntiming_on=exts[9] \ntiming_off=exts[10] \nbytes1={}  \nfor i=1,9,1 do bytes1[i]=bytes[i] bytes1[i+9]=bytes[i] end \nbytes1[13]=0x60 \nif(((timing_on==0)or(timing_on==nil))and((timing_off==0) or(timing_off==nil)))then return  end\nif((timing_on~=nil)and(timing_on>0)) then\nif(timing_on<600) then \n\tif(timing_on%60==0) then \n\t\tbytes1[2]=bit32.band(bytes1[2],0x0F)+0x80 \n\t\telse bytes1[2]=bit32.band(bytes1[2],0x0F)+0x90 \n\t\t\tend \nelseif((timing_on>=600)and(timing_on<1200)) then \n\tif(timing_on%60==0) then\n\t\tbytes1[2]=bit32.band(bytes[2],0x0F)+0xA0 \n\t\telse bytes1[2]=bit32.band(bytes1[2],0x0F)+0xB0  \n\t\t\tend\nelseif(timing_on>=1200) then \n\tif(timing_on%60==0) then \n\t\tbytes[2]=bit32.band(bytes1[2],0x0F)+0xC0  \n\t\telse bytes1[2]=bit32.band(bytes1[2],0x0F)+0xD0 \n\t\t\tend \nend\nbytes1[3]=bytes1[3]+math.floor((timing_on\/60)%10) \nbytes1[9]=bit32.lshift((bit32.band(bytes1[1],0x0F)+bit32.band(bytes1[2],0x0F)+bit32.band(bytes1[3],0x0F)+bit32.band(bytes1[4],0x0F)+bit32.rshift(bytes1[6],4)+0x0C),4)\nbytes1[11]=bytes1[2] \nbytes1[12]=bytes1[3] \nbytes1[15]=bit32.band(timing_on,0xFF) \nbytes1[16]=bit32.band(bit32.rshift(timing_on,8),0x0F)\nbytes1[17]=0 \nbytes1[18]=bit32.lshift((bit32.rshift(bytes1[9],4)+bit32.rshift(bytes1[15],4)+bit32.rshift(bytes1[16],4)+bit32.rshift(bytes1[17],4)+0x0D),4)+0x02 \nelseif((timing_off~=nil)and(timing_off>0))then\n\tif(timing_off<600) then \n\t\tif(timing_off%60==0) then \n\t\t\tbytes1[2]=bit32.band(bytes1[2],0x0F)+0x80  \n\t\t\telse \n\t\t\tbytes1[2]=bit32.band(bytes1[2],0x0F)+0x90 \n\t\t\tend \n\telseif((timing_off>=600)and(timing_off<1200)) then \n\t\tif(timing_off%60==0) then \n\t\t\tbytes1[2]=bit32.band(bytes1[2],0x0F)+0xA0  \n\t\t\telse bytes1[2]=bit32.band(bytes1[2],0x0F)+0xB0 \n\t\t\t\tend \n\telseif((timing_off)>=1200) then \n\t\tif(timing_off%60==0) then \n\t\t\tbytes1[2]=bit32.band(bytes1[2],0x0F)+0xC0 \n\t\t\telse bytes1[2]=bit32.band(bytes1[2],0x0F)+0xD0 \n\t\t\t\tend \n\tend\n\tbytes1[3]=bytes1[3]+math.floor((timing_off\/60)%10) \n\tbytes1[9]=bit32.lshift((bit32.band(bytes1[1],0x0F)+bit32.band(bytes1[2],0x0F)+bit32.band(bytes1[3],0x0F)+bit32.band(bytes1[4],0x0F)+bit32.rshift(bytes1[6],4)+0x0C),4) \n\tbytes1[11]=bytes1[2] \n\tbytes1[12]=bytes1[3] \n\tbytes1[16]=bit32.lshift(bit32.band(timing_off,0x0F),4) \n\tbytes1[17]=bit32.rshift(timing_off,4)\n\tbytes1[15]=0 \n\tbytes1[18]=bit32.lshift((bit32.rshift(bytes1[9],4)+bit32.rshift(bytes1[15],4)+bit32.rshift(bytes1[16],4)+bit32.rshift(bytes1[17],4)+0x0D),4)+0x01 \nend\nbytes=bytes1 \nend",
+          "301": "640,560",
+          "306": "1",
+          "305": "197",
+          "1517": "2@22&1-1*0",
+          "1506": "0,1,2,3,4,5,6,7,8,9",
+          "1017": "050D00111200@050D01111201@050E001F2000@050E011F2001@050F00101100@050F01101101@051000343800@051001343801@051002343802@051003343803@050800131400@050801131401@050B00121300@050B01121301@051600000100@051601000101@051A00353600@051A01353601",
+          "1516": "10@30-1440,30&9|9@30-1440,30&9",
+          "888888": [
+            {
+              "fname": "",
+              "fkey": "TURBO",
+              "fid": 8
+            },
+            {
+              "exts": {
+                "1509": "4&3|13&3",
+                "306": "1",
+                "305": "482",
+                "1002": "12419A20500211200080419A2060021E000062",
+                "303": "4&640,20000|8&640,40000,9000,4500|13&640,20000",
+                "302": "640,1680",
+                "301": "640,560",
+                "300": "9000,4500"
+              },
+              "fname": "",
+              "fkey": "Timer On",
+              "fid": 9
+            },
+            {
+              "fname": "",
+              "fkey": "Timer Off",
+              "fid": 10
+            },
+            {
+              "fname": "",
+              "fkey": "Light",
+              "fid": 11
+            },
+            {
+              "fname": "",
+              "fkey": "Health",
+              "fid": 13
+            },
+            {
+              "fname": "",
+              "fkey": "Air Change",
+              "fid": 14
+            },
+            {
+              "fname": "",
+              "fkey": "Dry",
+              "fid": 15
+            },
+            {
+              "fname": "",
+              "fkey": "Show Temp",
+              "fid": 16
+            },
+            {
+              "fname": "",
+              "fkey": "sleep",
+              "fid": 22
+            }
+          ],
+          "1012": "0305080103050804030508000305080303050802",
+          "303": "4&640,20000",
+          "302": "640,1680",
+          "1509": "4&3"
+        },
+        "frequency": 38000,
+        "type": 2,
+        "source": "kk",
+        "brand": "72",
+        "order": 50,
+        "device": 3
+      },
+      {
+        "_id": "72_2032",
+        "key": {
+          "1001": "00020041",
+          "1013": "03020400030204010302040203020403",
+          "1002": "054908400800",
+          "300": "8890,4490",
+          "1015": "0300020103000200",
+          "1503": "T|S&1,2,3",
+          "1003": "020101",
+          "301": "536,586",
+          "1004": "040009010004000B0100040008010004000C010004000A0100",
+          "1504": "T|S&0",
+          "306": "1",
+          "305": "112",
+          "888888": [],
+          "1505": "T|S&0,2,3",
+          "302": "538,1720",
+          "1509": "-1&3"
+        },
+        "frequency": 38000,
+        "type": 2,
+        "source": "kk",
+        "brand": "72",
+        "order": 50,
+        "device": 3
+      },
+      {
+        "_id": "72_2342",
+        "key": {
+          "1001": "00020041",
+          "1013": "03020400030204030302040203020401",
+          "1002": "054908005002",
+          "300": "8890,4490",
+          "1015": "0300020103000200",
+          "1503": "T|S&1,2,3",
+          "1003": "020101",
+          "301": "536,586",
+          "1004": "040009010004000C0100040008010004000B010004000A0100",
+          "1504": "T|S&0",
+          "306": "1",
+          "305": "112",
+          "1505": "T|S&0,2,3",
+          "302": "538,1720",
+          "1509": "-1&3"
+        },
+        "frequency": 38000,
+        "type": 2,
+        "source": "kk",
+        "brand": "72",
+        "order": 50,
+        "device": 3
+      },
+      {
+        "_id": "72_1937",
+        "key": {
+          "1001": "00020040",
+          "1518": "if(exts~=nil) then\nif(power==0) then\ns=exts[22]  \nif((s~=nil)and(s>0) and (s<=7))then\nif (s==1) then\nbytes[5]=0x30\nelseif (s==2) then\nbytes[5]=0x31\nelseif (s==3) then\nbytes[5]=0x32\nelseif (s==4) then\nbytes[5]=0x33\nelseif (s==5) then\nbytes[5]=0x34\nelseif (s==6) then\nbytes[5]=0x35\nelseif (s==7) then\nbytes[5]=0x36\nend\nend\ntiming_off=exts[10]  \nif((timing_off~=nil)and(timing_off>0) and (timing_off<=1440))then\nf=timing_off%60\nif (f==10) then\nbytes[4]=0x10\nelseif (f==20) then\nbytes[4]=0x20\nelseif (f==30) then\nbytes[4]=0x30\nelseif (f==40) then\nbytes[4]=0x40\nelseif (f==50) then\nbytes[4]=0x50\nend\nt=math.floor(timing_off\/60)\nif (t==0) then\nbytes[5]=0x52\nelseif (t==1) then\nbytes[5]=0x41\nelseif (t==2) then\nbytes[5]=0x42\nelseif (t==3) then\nbytes[5]=0x43\nelseif (t==4) then\nbytes[5]=0x44\nelseif (t==5) then\nbytes[5]=0x45\nelseif (t==6) then\nbytes[5]=0x46\nelseif (t==7) then\nbytes[5]=0x47\nelseif (t==8) then\nbytes[5]=0x48\nelseif (t==9) then\nbytes[5]=0x49\nelseif (t==10) then\nbytes[5]=0x50\nelseif (t==11) then\nbytes[5]=0x51\nelseif (t==12) then\nbytes[5]=0xD2\nelseif (t==13) then\nbytes[5]=0xC1\nelseif (t==14) then\nbytes[5]=0xC2\nelseif (t==15) then\nbytes[5]=0xC3\nelseif (t==16) then\nbytes[5]=0xC4\nelseif (t==17) then\nbytes[5]=0xC5\nelseif (t==18) then\nbytes[5]=0xC6\nelseif (t==19) then\nbytes[5]=0xC7\nelseif (t==20) then\nbytes[5]=0xC8\nelseif (t==21) then\nbytes[5]=0xC9\nelseif (t==22) then\nbytes[5]=0xD0\nelseif (t==23) then\nbytes[5]=0xD1\nelseif (t==24) then\nbytes[5]=0x52\nend\nend\nend\nend",
+          "1013": "03020400030204010302040203020403",
+          "1002": "0748001200122902",
+          "1502": "T&16",
+          "300": "9000,4500",
+          "1501": "T&16",
+          "1015": "030002010300020003000202",
+          "1515": "10|0-1440,10|0|CHAFD@22|0-7|0|CHAFD",
+          "1503": "T",
+          "1003": "0002052002052102052202052302052402052502052602052702052802052902052A02052B02052C02052D",
+          "301": "560,560",
+          "1504": "T&16",
+          "306": "1",
+          "305": "187",
+          "1517": "10@22&10-1440*0|22@10&1-7*0",
+          "1506": "0,1,2",
+          "888888": [],
+          "1012": "0305080003050803060508072830200305080203050801",
+          "1505": "T&16",
+          "302": "560,2400",
+          "1509": "-1&4"
+        },
+        "frequency": 38000,
+        "type": 2,
+        "source": "kk",
+        "brand": "72",
+        "order": 50,
+        "device": 3
+      },
+      {
+        "_id": "72_2067",
+        "key": {
+          "1001": "00020040",
+          "1013": "03020400030204030302040203020401",
+          "1002": "0748000100012802",
+          "300": "8900,4330",
+          "1015": "0300020103000200",
+          "1503": "T|S&1,2,3",
+          "1003": "020501",
+          "301": "594,580",
+          "1004": "040048052004004B052004004C052004005A05200400590520",
+          "1504": "T|S&0",
+          "306": "1",
+          "305": "147",
+          "888888": [],
+          "1505": "T|S&0,2,3",
+          "302": "589,1750",
+          "1509": "-1&4"
+        },
+        "frequency": 38000,
+        "type": 2,
+        "source": "kk",
+        "brand": "72",
+        "order": 50,
+        "device": 3
+      },
+      {
+        "_id": "72_2552",
+        "key": {
+          "1001": "00020080",
+          "1013": "03020400030204010302040203020403",
+          "1002": "0788001200122802",
+          "300": "8900,4340",
+          "1015": "0300020203000200",
+          "1503": "T|S&1,2,3",
+          "1003": "020501",
+          "301": "590,623",
+          "1004": "040088052004008B052004008C052004009A05200400990520",
+          "1504": "T|S&0",
+          "306": "1",
+          "305": "187",
+          "888888": [],
+          "1505": "T|S&0,2,3",
+          "302": "589,2520",
+          "1509": "-1&4"
+        },
+        "frequency": 38000,
+        "type": 2,
+        "source": "kk",
+        "brand": "72",
+        "order": 50,
+        "device": 3
+      },
+      {
+        "_id": "72_1262",
+        "key": {
+          "1001": "00020040",
+          "1013": "03020400030204010302040203020403",
+          "1002": "0748000100022802",
+          "300": "8900,4330",
+          "1015": "0300020103000200",
+          "1503": "T",
+          "1003": "020501",
+          "301": "594,580",
+          "1004": "040048052004004B052004004C052004005A05200400590520",
+          "1504": "S&0",
+          "306": "1",
+          "305": "147",
+          "888888": [],
+          "1505": "T|S&0,2,3",
+          "302": "589,1750",
+          "1509": "-1&4"
+        },
+        "frequency": 38000,
+        "type": 2,
+        "source": "kk",
+        "brand": "72",
+        "order": 50,
+        "device": 3
+      },
+      {
+        "_id": "kk_3_72_11747",
+        "key": {
+          "1001": "00020041",
+          "1013": "03020400030204010302040203020403",
+          "1002": "054900400800",
+          "1502": "NA",
+          "300": "9190,4560",
+          "1015": "030002010300020003000202",
+          "1503": "T|S&1,2,3",
+          "1003": "020101",
+          "301": "617,570",
+          "1004": "020009000200480002000A",
+          "1504": "NA",
+          "306": "1",
+          "305": "112",
+          "1506": "0,1,2",
+          "888888": [],
+          "1505": "S&1,2,3",
+          "302": "617,1700",
+          "1509": "-1&3"
+        },
+        "frequency": 37900,
+        "type": 2,
+        "source": "kk",
+        "brand": "72",
+        "order": 51,
+        "device": 3
+      },
+      {
+        "_id": "72_2807",
+        "key": {
+          "1001": "00020520",
+          "1518": "if(exts~=nil) then\nif(functionId==22) then\nsp=exts[22];\nif (sp~=nil and sp>0) then\nbytes[9]=(bytes[9]&0xF8)+1;\nend\nend\nif(power==1) then\ntiming_on=exts[9]; \nif((timing_on~=nil)and(timing_on>0) and (timing_on<=1440))then\nbytes[6]=0x34;\nbytes[9]=(bytes[9]|0x40);\nbytes[11]=math.floor(timing_on\/10);\nend\nelseif(power==0) then\ntiming_off=exts[10]; \nif((timing_off~=nil)and(timing_off>0) and (timing_off<=1440))then\nbytes[6]=0x2C;\nbytes[9]=(bytes[9]|0x40);\nbytes[10]=math.floor(timing_off\/10);\nend\nend\nend\nbytes[14]=0;\nfor i=1,13,1 do\nbytes[14]=bytes[14]+bytes[i];\nend",
+          "1011": "033C400F",
+          "1013": "03454800034548020345480303454805",
+          "1002": "0E23CB26010024030F380000000083",
+          "300": "3660,1800",
+          "1015": "03424507034245000342450103424502034245030342450403424505",
+          "1008": "0401000D0D",
+          "1515": "22|0-1|0|CHAFD@9|10-1440,10|1|CHAFD@10|10-1440,10|0|CHAFD",
+          "1503": "T",
+          "1522": "if(exts~=nil) then\nif(functionId==22) then\nsp=exts[22];\nif (sp~=nil and sp>0) then\nbytes[9]=bit32.band(bytes[9],0xF8)+1;\nend\nend\nif(power==1) then\ntiming_on=exts[9]; \nif((timing_on~=nil)and(timing_on>0) and (timing_on<=1440))then\nbytes[6]=0x34;\nbytes[9]=bit32.bor(bytes[9],0x40);\nbytes[11]=math.floor(timing_on\/10);\nend\nelseif(power==0) then\ntiming_off=exts[10]; \nif((timing_off~=nil)and(timing_off>0) and (timing_off<=1440))then\nbytes[6]=0x2C;\nbytes[9]=bit32.bor(bytes[9],0x40);\nbytes[10]=math.floor(timing_off\/10);\nend\nend\nend\nbytes[14]=0;\nfor i=1,13,1 do\nbytes[14]=bytes[14]+bytes[i];\nend",
+          "301": "400,400",
+          "1504": "T|S&0",
+          "306": "1",
+          "305": "137",
+          "1517": "22@5&1-3*0|5@22&1-1*0|",
+          "1506": "0,1,2,3,4,5,6",
+          "888888": [
+            {
+              "fname": "",
+              "fkey": "Timer On",
+              "fid": 9
+            },
+            {
+              "fname": "",
+              "fkey": "Timer Off",
+              "fid": 10
+            },
+            {
+              "fname": "",
+              "fkey": "sleep",
+              "fid": 22
+            }
+          ],
+          "1012": "0334380303343801063438083C3E07063438073C3E07063438023C3E07",
+          "1505": "T",
+          "302": "400,1400"
+        },
+        "frequency": 38000,
+        "type": 2,
+        "source": "kk",
+        "brand": "72",
+        "order": 900,
+        "device": 3
+      },
+      {
+        "_id": "kk_3_72_2732",
+        "key": {
+          "1001": "000400400940",
+          "1518": "if(exts~=nil) then\nif functionId==21 then\nlf=exts[21]; \nif lf ==1 then\nbytes[1]=bytes[1]&0xBF + 0x40 ;\nbytes[6]=bytes[6]&0x0F + 0x10 ;\nbytes[10]=bytes[10]&0xBF + 0x40 ;\nelseif lf ==2 then\nbytes[1]=bytes[1]&0xBF;\nbytes[6]=bytes[6]&0x0F;\nbytes[10]=bytes[10]&0xBF;\nend\nbytes[9]= 0xC0+(((bytes[1]&0x0F)+ (bytes[2]&0x0F) + ( bytes[3]&0x0F) +( bytes[4]&0x0F) +  ((bytes[6]&0xF0)>>4) )<<4) ;\nend\nif(power==1) then\ntiming_on=exts[9]; \nif((timing_on~=nil)and(timing_on>0) and (timing_on<=1440))then\nbytes1={};\nif timing_on<600  then\nif timing_on%60==0 then\nbytes[2]=bytes[2]+0x80;\nelse \nbytes[2]=bytes[2]+0x90;\nend\nbytes[3]=bytes[3]+(math.floor(timing_on\/60));\nelseif timing_on>600 and timing_on<1200  then\nif timing_on%60==0 then\nbytes[2]=bytes[2]+0xA0;\nelse \nbytes[2]=bytes[2]+0xB0;\nend\nbytes[3]=bytes[3]+(math.floor(timing_on\/60))-10;\nelseif timing_on>1200 and timing_on<=1440  then\nif timing_on%60==0 then\nbytes[2]=bytes[2]+0xC0;\nelse \nbytes[2]=bytes[2]+0xD0;\nend\nbytes[3]=bytes[3]+(math.floor(timing_on\/60))-20;\nend\nbytes1[1]=bytes[1];\nbytes1[2]=bytes[2];\nbytes1[3]=bytes[3];\nbytes1[4]=bytes[4];\nbytes1[5]=bytes[5];\nbytes1[6]=bytes[6];\nbytes1[7]=bytes[7];\nbytes1[8]=bytes[8];\nbytes1[9]= 0xC0+(((bytes1[1]&0x0F)+ (bytes1[2]&0x0F) + ( bytes1[3]&0x0F) +( bytes1[4]&0x0F) +  ((bytes1[6]&0xF0)>>4) )<<4) ;\nbytes1[10]=bytes[1];\nbytes1[11]=bytes[2];\nbytes1[12]=bytes[3];\nbytes1[13]=bytes[4]+0x10;;\nbytes1[14]=bytes[5];\nbytes1[15]=timing_on&0xFF;\nbytes1[16]=(timing_on&0xF00)>>8;\nbytes1[17]=0;\nbytes1[18]= (bytes1[10]&0x0F) + ( bytes1[11]&0x0F) +   (bytes1[12]&0x0F) +   (bytes1[13]&0x0F) +  ((bytes1[15]&0xF0)>>4);\nbytes1[18]=((0x0A+(bytes1[18]&0x0F))<<4)+0x02;\nbytes1[19]=bytes[1];\nbytes1[20]=bytes[2];\nbytes1[21]=bytes[3];\nbytes1[22]=bytes[4]+0x20;\nbytes1[23]=bytes[5];\nbytes1[24]=bytes[15];\nbytes1[25]=bytes[16];\nbytes1[26]=bytes[17];\nbytes1[27]=bytes[18];\nbytes1[27]=(bytes1[27]&0x0F)+(( 0x0A+(bytes1[19]&0x0F) + ( bytes1[20]&0x0F) +   (bytes1[21]&0x0F) +   (bytes1[22]&0x0F) +  ((bytes1[24]&0xF0)>>4) +   ((bytes1[26]&0xF0)>>4))<<4) ;\nbytes=bytes1;\nreturn;\nend\nelseif(power==0) then\ntiming_off=exts[10]; \nif((timing_off~=nil)and(timing_off>0) and (timing_off<=1440))then\nbytes1={};\nif timing_off<600  then\nif timing_off%60==0 then\nbytes[2]=bytes[2]+0x80;\nelse \nbytes[2]=bytes[2]+0x90;\nend\nbytes[3]=bytes[3]+(math.floor(timing_off\/60));\nelseif timing_off>600 and timing_off<1200  then\nif timing_off%60==0 then\nbytes[2]=bytes[2]+0xA0;\nelse \nbytes[2]=bytes[2]+0xB0;\nend\nbytes[3]=bytes[3]+(math.floor(timing_off\/60))-10;\nelseif timing_off>1200 and timing_off<=1440  then\nif timing_off%60==0 then\nbytes[2]=bytes[2]+0xC0;\nelse \nbytes[2]=bytes[2]+0xD0;\nend\nbytes[3]=bytes[3]+(math.floor(timing_off\/60))-20;\nend\nbytes1[1]=bytes[1];\nbytes1[2]=bytes[2];\nbytes1[3]=bytes[3];\nbytes1[4]=bytes[4];\nbytes1[5]=bytes[5];\nbytes1[6]=bytes[6];\nbytes1[7]=bytes[7];\nbytes1[8]=bytes[8];\nbytes1[9]= 0xC0+(((bytes1[1]&0x0F)+ (bytes1[2]&0x0F) + ( bytes1[3]&0x0F) +( bytes1[4]&0x0F) +  ((bytes1[6]&0xF0)>>4) )<<4) ;\nbytes1[10]=bytes[1];\nbytes1[11]=bytes[2];\nbytes1[12]=bytes[3];\nbytes1[13]=bytes[4]+0x10;;\nbytes1[14]=bytes[5];\nbytes1[15]=0;\nbytes1[16]=(timing_off&0x0F)<<4;\nbytes1[17]=(timing_off&0xFF0)>>4;\nbytes1[18]= (bytes1[10]&0x0F) + ( bytes1[11]&0x0F) +   (bytes1[12]&0x0F) +   (bytes1[13]&0x0F) +  ((bytes1[16]&0xF0)>>4)+  ((bytes1[17]&0xF0)>>4);\nbytes1[18]=((0x0A+(bytes1[18]&0x0F))<<4)+0x01;\nbytes1[19]=bytes[1];\nbytes1[20]=bytes[2];\nbytes1[21]=bytes[3];\nbytes1[22]=bytes[4]+0x20;\nbytes1[23]=bytes[5];\nbytes1[24]=bytes[15];\nbytes1[25]=bytes[16];\nbytes1[26]=bytes[17];\nbytes1[27]=bytes[18];\nbytes1[27]=(bytes1[27]&0x0F)+(( 0x0A+(bytes1[19]&0x0F) + ( bytes1[20]&0x0F) +   (bytes1[21]&0x0F) +   (bytes1[22]&0x0F) +  ((bytes1[24]&0xF0)>>4) +   ((bytes1[26]&0xF0)>>4))<<4) ;\nbytes=bytes1;\nreturn;\nend\nend\nend\nret=( 0x0A+(bytes[10]&0x0F) + ( bytes[11]&0x0F) +   (bytes[12]&0x0F) +   (bytes[13]&0x0F) +  ((bytes[15]&0xF0)>>4) +   ((bytes[17]&0xF0)>>4))<<4 ;\nbytes[18]=(bytes[18]&0x0F)+ret;",
+          "1013": "090204004A4C00808400090204014A4C01808401090204034A4C03808403090204034A4C03808405",
+          "1002": "12690020500211200050490020700200002030",
+          "300": "9000,4500",
+          "1015": "090102012C3001494A01090102002C3000494A00",
+          "1008": "0805100C010305070A",
+          "1515": "8|0-1|0|CH@9|0-1440,30|1|CHAFD@10|0-1440,30|0|CHAFD@11|1,0-1|2|CHAFD@12|1,0-1|0|H@15|0-1|0|CD@21|1-2|0|CHAFD@22|0-2|0|CHD@36|0-5|0|CHAFD@106|0-1|0|CHAFD",
+          "1503": "T",
+          "1511": "bytes[17]= (byte)( (bytes[9]&0x0F) +  ( bytes[10]&0x0F) +  (bytes[11]&0x0F) +  (bytes[12]&0x0F) +  ((bytes[14]&0xF0)>>>4) +  ((bytes[16]&0xF0)>>>4)); \t  bytes[17]=(byte)(((byte)0x0A+(byte)(bytes[17]&0x0F))<<4);",
+          "1003": "0401010A01",
+          "301": "640,560",
+          "306": "1",
+          "305": "482",
+          "1517": "8@106&1-2*0|106@8&1-1*0|5@8&1-1*0|5@106&1-2*0|22@106&0-2*1|1,2,3,4,8,12,15,22,106@36&1-5*0",
+          "1017": "0808001314005B5C00@0808011314015B5C01@080B001213005A5B00@080B011213015A5B01@080C00101101585901@080C01101100585900@051000343800@051001343801@051002343802@051003343803@080F00101100585900@080F01101101585901@056A00707400@056A01707408@0B1600000100484900777800@0B1601000101484901777800@0B1602000100484900777801@0524008C9000@0524018C9001@0524028C9002@0524038C9003@0524048C9004@0524058C9005",
+          "1516": "9@30-1440,30&9|10@30-1440,30&9",
+          "888888": [],
+          "1012": "060508014D5001060508044D50040C0508000C10094D50005458090F0204010508034A4C014D5003808401060508024D5002",
+          "303": "4&640,20000|8&640,40000,9000,4500|13&640,20000",
+          "1505": "S&0,2,3",
+          "302": "640,1660",
+          "1509": "4&3|13&3"
+        },
+        "frequency": 38690,
+        "type": 2,
+        "source": "kk",
+        "brand": "72",
+        "order": 999,
+        "device": 3
+      },
+      {
+        "_id": "72_2617",
+        "key": {
+          "1001": "00020001",
+          "1005": "00020351020352020350",
+          "1002": "05490A005102",
+          "1502": "S&0",
+          "300": "9010,4490",
+          "1501": "S&0",
+          "1015": "0300040403000400",
+          "1503": "NA",
+          "1003": "020101",
+          "301": "630,591",
+          "1004": "040009010004000C0100",
+          "1504": "NA",
+          "306": "1",
+          "305": "112",
+          "888888": [],
+          "1505": "NA",
+          "302": "538,1650",
+          "1509": "-1&3"
+        },
+        "frequency": 38690,
+        "type": 2,
+        "source": "kk",
+        "brand": "72",
+        "order": 999,
+        "device": 3
+      },
+      {
+        "_id": "kk_3_72_5163",
+        "key": {
+          "1001": "00020110",
+          "1005": "020200020201020202020203",
+          "1002": "105F1F0026000F0000000000000000003B",
+          "1502": "NA",
+          "1008": "0501000F0F88",
+          "1503": "T|S&1,2,3",
+          "1003": "020316020317020318020319020320020321020322020323020324020325020326020327020328020329020330",
+          "1007": "02050F020500",
+          "301": "550,550",
+          "1004": "02011F0004010F030002013F02012F",
+          "1504": "S&0",
+          "306": "1",
+          "305": "1370",
+          "888888": [],
+          "1505": "S&1,2,3",
+          "302": "550,1500"
+        },
+        "frequency": 38000,
+        "type": 2,
+        "source": "kk",
+        "brand": "72",
+        "order": 999,
+        "device": 3
+      },
+      {
+        "_id": "kk_3_72_2717",
+        "key": {
+          "1514": "6&&1A00020ED8010008D9001400140014003C010004014300A1000000D02F|7&&1A00020ED8010008D9001400140014003C010004014300A1000000D12E",
+          "1011": "031418000314180103141802031418030314180403141805031418060314180703141808031418090314180A0314180B0314180C0314180D0314180E",
+          "1013": "030A0C00030A0C01030A0C02030A0C03",
+          "1016": "0401080901",
+          "1002": "04C0011A24",
+          "1502": "NA",
+          "300": "9000,4000",
+          "1008": "0402000303",
+          "301": "550,550",
+          "1510": "6&&8416,4208,526,526,526,526,526,526,526,526,526,1578,526,526,526,1578,526,1578,526,1578,526,1578,526,1578,526,1578,526,526,526,1578,526,526,526,526,526,1000|7&&8416,4208,526,1578,526,526,526,526,526,526,526,1578,526,526,526,1578,526,1578,526,526,526,1578,526,1578,526,1578,526,526,526,1578,526,526,526,526,526,1000",
+          "1504": "T",
+          "306": "1",
+          "305": "950",
+          "888888": [],
+          "1012": "030C100100030C1000030C1003030C1002",
+          "1505": "S&0,2,3",
+          "302": "550,1660"
+        },
+        "frequency": 38000,
+        "type": 2,
+        "source": "kk",
+        "brand": "72",
+        "order": 999,
+        "device": 3
+      },
+      {
+        "_id": "72_2612",
+        "key": {
+          "1001": "00020051",
+          "1013": "00030204010302040203020403",
+          "1002": "05590A005002",
+          "1502": "S&0",
+          "300": "8950,4410",
+          "1501": "S&0",
+          "1015": "0300020103000200",
+          "1503": "NA",
+          "1003": "020101",
+          "301": "630,591",
+          "1004": "040009010004000C0100",
+          "1504": "NA",
+          "306": "1",
+          "305": "112",
+          "888888": [],
+          "1505": "NA",
+          "302": "538,1650",
+          "1509": "-1&3"
+        },
+        "frequency": 38690,
+        "type": 2,
+        "source": "kk",
+        "brand": "72",
+        "order": 999,
+        "device": 3
+      },
+      {
+        "_id": "72_1997",
+        "key": {
+          "1001": "00020001",
+          "1005": "020350020351020352020350",
+          "1016": "04060004040407000404",
+          "1002": "050908005002",
+          "300": "8890,4490",
+          "1503": "T|S&1,2,3",
+          "1003": "020101",
+          "301": "536,586",
+          "1004": "040009010004000C0100040008010004000B010004000A0100",
+          "1504": "T|S&0",
+          "306": "1",
+          "305": "112",
+          "1506": "1",
+          "888888": [],
+          "1505": "T|S&0,2,3",
+          "302": "538,1720",
+          "1509": "-1&3"
+        },
+        "frequency": 38000,
+        "type": 2,
+        "source": "kk",
+        "brand": "72",
+        "order": 999,
+        "device": 3
+      },
+      {
+        "_id": "kk_3_72_5393",
+        "key": {
+          "1001": "00020200",
+          "1013": "03000400030004010300040203000403",
+          "1002": "0500160A0000",
+          "1502": "NA",
+          "300": "3000,3000",
+          "1015": "0314180A03141802",
+          "1503": "NA",
+          "1508": "2",
+          "1003": "020116020117020118020119020120020121020122020123020124020125020126020127020128020129020130",
+          "301": "500,500",
+          "305": "1175",
+          "888888": [],
+          "1012": "0304080000000304080503040801",
+          "303": "-1&60000",
+          "1505": "S&0,2,3",
+          "302": "500,1500"
+        },
+        "frequency": 38000,
+        "type": 2,
+        "source": "kk",
+        "brand": "72",
+        "order": 999,
+        "device": 3
+      },
+      {
+        "_id": "kk_3_72_5139",
+        "key": {
+          "1001": "00020121",
+          "1518": "bytes[8]=((((bytes[1]&0x0F)+((bytes[1]&0xF0)>>4)+(bytes[2]&0x0F)+((bytes[2]&0xF0)>>4)+(bytes[3]&0x0F)+((bytes[3]&0xF0)>>4)+(bytes[4]&0x0F)+((bytes[4]&0xF0)>>4)+(bytes[5]&0x0F)+((bytes[5]&0xF0)>>4)+(bytes[6]&0x0F)+((bytes[6]&0xF0)>>4)+(bytes[7]&0x0F)+((bytes[7]&0xF0)>>4))&0x0F)<<4)+0x88\nif (power==0) then\nif (windSpeed==1) then\nbytes[8]=bytes[8]-0x44\nelseif (windSpeed==2) then \nbytes[8]=bytes[8]-0x66\nelseif (windSpeed==3) then \nbytes[8]=bytes[8]-0x77\nend\nend",
+          "1002": "0862250000400020D8",
+          "1502": "NA",
+          "300": "6500,7000",
+          "1511": "bytes[7]=(byte)(((((bytes[0]&0x0F)+((bytes[0]&(byte)0xF0)>>4)+(bytes[1]&0x0F)+((bytes[1]&(byte)0xF0)>>4)+(bytes[2]&0x0F)+((bytes[2]&(byte)0xF0)>>4)+(bytes[3]&0x0F)+((bytes[3]&(byte)0xF0)>>4)+(bytes[4]&0x0F)+((bytes[4]&(byte)0xF0)>>4)+(bytes[5]&0x0F)+((bytes[5]&(byte)0xF0)>>4)+(bytes[6]&0x0F)+((bytes[6]&(byte)0xF0)>>4))&0x0F)<<4)+(byte)0x88);   if (power==0){ if (windSpeed==1) { bytes[7]=(byte)(bytes[7]-(byte)0x44);} else if (windSpeed==2 ){ bytes[7]=(byte)(bytes[7]-(byte)0x66);} else if (windSpeed==3) { bytes[7]=(byte)(bytes[7]-(byte)0x77);} }",
+          "1003": "020061020071020081020091020002020012020022020032020042020052020062020072020082020092020003",
+          "1522": "bytes[8]=bit32.lshift(bit32.band((bit32.band(bytes[1],0x0F)+bit32.rshift(bit32.band(bytes[1],0xF0),4)+bit32.band(bytes[2],0x0F)+bit32.rshift(bit32.band(bytes[2],0xF0),4)+bit32.band(bytes[3],0x0F)+bit32.rshift(bit32.band(bytes[3],0xF0),4)+bit32.band(bytes[4],0x0F)+bit32.rshift(bit32.band(bytes[4],0xF0),4)+bit32.band(bytes[5],0x0F)+bit32.rshift(bit32.band(bytes[5],0xF0),4)+bit32.band(bytes[6],0x0F)+bit32.rshift(bit32.band(bytes[6],0xF0),4)+bit32.band(bytes[7],0x0F)+bit32.rshift(bit32.band(bytes[7],0xF0),4)),0x0F),4)+0x88\nif (power==0) then\nif (windSpeed==1) then\nbytes[8]=bytes[8]-0x44\nelseif (windSpeed==2) then \nbytes[8]=bytes[8]-0x66\nelseif (windSpeed==3) then \nbytes[8]=bytes[8]-0x77\nend\nend",
+          "1007": "020620020610",
+          "301": "550,1500",
+          "1004": "02044000020480020410020420",
+          "306": "1",
+          "305": "1360",
+          "888888": [],
+          "303": "-1&7000,550,20000",
+          "1505": "S&1,2,3",
+          "302": "550,3500"
+        },
+        "frequency": 38000,
+        "type": 2,
+        "source": "kk",
+        "brand": "72",
+        "order": 999,
+        "device": 3
+      },
+      {
+        "_id": "kk_3_72_5641",
+        "key": {
+          "1001": "00020002",
+          "1011": "031418000314180103141802031418030314180403141805031418060314180703141808031418090314180A0314180B0314180C0314180D0314180E",
+          "1013": "03101401031014040310140803101402",
+          "1002": "0482401A19",
+          "1502": "NA",
+          "300": "500,6000",
+          "1008": "0403000303",
+          "307": "1",
+          "1503": "S&1,2,3",
+          "1508": "2",
+          "1007": "020140020100",
+          "301": "550,550",
+          "1504": "T|S&0",
+          "306": "1",
+          "305": "1475",
+          "888888": [],
+          "1012": "0303080200030308010303080803030810",
+          "303": "-1&500,1200",
+          "1505": "T|S&0,2,3",
+          "302": "550,2100"
+        },
+        "frequency": 38000,
+        "type": 2,
+        "source": "kk",
+        "brand": "72",
+        "order": 999,
+        "device": 3
+      },
+      {
+        "key": {
+          "WIND DIRECTION": "sNbCdr39USh73X21TM5LNZMRke9NDRTaXtm5KJs671HEBoOvZ9uWa2pQlotq4h2dzgeinw8MNuxl1sr9CFTctlGu\/dvm6lN75QntfNlA6j\/US5ameHnpxBun1fnX94L2IdfiET8Roa13Q2zdEp+l3zHwgnmqx2bdL1WSTpJGDUc=",
+          "DRY": "1el7njL33L3COmK0ySMYfrL7n54K9h4lScjKLnELL9OGnFr0LeX1tq9c9yDtRmxgR66tVLb4lhZwA3rdS6C0qX4SDnHETwCE5kewauRsCU7W3vYSIfsVcJI13VKzqZaqagxbLNAnCGoJRp58Z2ZX7629RllUhRQek1iCtrFG9C8rg9ndpfPW+r5FQfaifVM3",
+          "HEAT": "8aeQyG5xuOS1jW5Y59ia64UoW+40TW99PtFV+38FCgXtSTqWhPJLUR286l82KDPHipC1LoqBLwR4lRGnnuDxE31JlEWDkqAbseGvrQg\/ZSXOjJDTo1J7YU9skUEylCOlWhNBAiBd5GP3ZPLQBqxnVPeeFjMniTk\/AeL7rv892sU=",
+          "COOL": "rOcjYSa+N9ZwaqbrLyo5yVuj5fSx05PTNJ2sBdEWKC+m4aNqn8qYG+6lkzFpcZrFAR0SULEGsQL9Fm0cXf5V0b0Om7iDNAeT1lPo5RFZfkRGvqQMtEy3MYm61LAGMRtIUnxAzIkzl\/FzFSyMFTUwLkys8woAEOwjduGfGlW\/1HXMILaeJgUIYWNXKij57Uc7",
+          "fanspeed": "pFeP+kaaIRdd+Mikg8Iqxni1n4M\/4Nx5k9ZMupDgoJ8Ewx98gpcFYUWB9F\/Yl1P3\/xBFiG1D9E7q21GunpZg5ABsJ0NbbCoobdd8JELTHFGxgkfoVSdvi1wrzmlIB4j0ALbc7cN0KDcCCcI40OLrW6vtnSCvhbNXZEjzwxpIojY=",
+          "temperature_down": "46x9VjD6QIA\/M676zuCZKjVOjjDwp8Rbq62dXMC9sxbBvMkMbmNJin92cf7ZXWH1Lvrv6pBoZreV2YDFBQol\/Y+ocJufngjNQVmY9fihpZPD8kVL\/o0dJqSbTENC8Qokp39KqTrqQ+yJqtGqIdmbzQwgTj\/fqIKJ0iUdmnf5Hw8FhuBwxZzJ\/nMQsKKpHsbh",
+          "temperature_up": "FP+bpKR0m1kyGJMBMGau1rVA1ropzKrM14gdM\/WoF2Sgn2K6w8p56gGsJ+ao8nqGEW5oW2JNbfSmCNRWePk\/QCbpN4UDPgicc9uCqamtqGEdpRlcwtPm90u0uklmNwYCog6m37KQtKLzzEOC5Q7DuWV3EJyf0+TxiaFh05kJQP0=",
+          "power": "5iq\/iEdLuP++VdLP90me7TCKt+kfoWLziyeDxWZm6UcsSmawptEumpfhs\/foMZutck6uCHzmoAe3QvwuweCwbe5\/bXd7jeaEPApIINtNvnRChnEjksIiRFJWl8JFamqYuouYHJi+PhXq1vyKo\/S2il6g7hXJpBAPFfH\/93d2NUYrTlrZNELXz1XGpXwiqzYU"
+        },
+        "order": 999,
+        "frequency": 37900,
+        "brand": "72",
+        "device": 3,
+        "_id": "kk_3_72_4796",
+        "source": "kk",
+        "type": 1
+      },
+      {
+        "_id": "72_2287",
+        "key": {
+          "1001": "00020080",
+          "1013": "03020400030204010302040203020403",
+          "1002": "0788001030002702",
+          "1502": "T&16",
+          "300": "8900,4340",
+          "1501": "T&16",
+          "1015": "0300020203000201",
+          "1503": "T|S&1,2,3",
+          "1003": "020501",
+          "301": "590,623",
+          "1004": "040088051F04008B051F040088051F04009A051F040099051F",
+          "1504": "T|S&0",
+          "306": "1",
+          "305": "187",
+          "888888": [],
+          "1505": "T|S&0,2,3",
+          "302": "589,2520",
+          "1509": "-1&4"
+        },
+        "frequency": 38000,
+        "type": 2,
+        "source": "kk",
+        "brand": "72",
+        "order": 999,
+        "device": 3
+      },
+      {
+        "key": {
+          "WIND DIRECTION": "gR3QBdyL6gJufG5JXSX4SWijiNDJfl5YF\/QlaFsy1X4gK\/ROge0kCHkUmlbS+s45T+Rk009SRXyDnSOo3dmfU3i\/dD6phhvAP+4lGX5MT7O8l28XuEB6algKewOVeqDk6nYH92G+vSe1X9I2MYqFpEAbOD67DQePCEvi8yIUH6FWuuOVWhV7xAVcoQkdTL66",
+          "fanspeed": "c39T7mkd9TFN44G0109DlnkxwzM98GX7J\/gX3qJovyFsHJPul7FfEYYUqI8BOvPApVYMO4mVfT8Tb2QuOr\/++Gs3gG7qMipfrB9z1eu7+Fy1W32aB1p29UoZUeQSQyw+E9Mex5WrQsTUDOU\/OaeOsYSduX2Wfe8BivmgO2b9igdr7nLIKDrrKOhoj5LpELXl",
+          "temperature_down": "au22\/KRS\/ttOv4w80\/2\/OjZ9R\/c357Qe2jP8iCBkjbHwyAudBHXwOkQKCyDClCb6N3hItGEC8tAuIQOfgKZUEJ8kEEPEnPeJD\/0dOfLpEY0+9QYf6JM5b4tciEsXKQs4ryoPHZKPykf2zpQ4bWTcIV1noe7YljfJrF6mPY7JQQM=",
+          "temperature_up": "tAL9UVZEcz42GdXrJSLACHbECqgP88fJaDvX9a5u2xt6rtBTdRUXIkbrJpvKpztGfp0s\/QtvWg3QbDqH8U1x0+VvLWiu\/8Mlofo47h5Pde3dhcVJzft9\/oS+Q2SrfMUocEB9Cbq67dUO+IvVSO0FiFW4TfV0MNbitbpamYVKD1g=",
+          "mode": "wTICHPQ0tH67LXeOmS5ItH30X+LRsNEkYnaqA\/ulRVb+g+O\/09A2+UWXonzokIo6xeQahuIyQNa\/LOysa4UrwXdRDwcu4tsR3tZ49z0Dw+vqUimMnXsG5AYd85HHHYG0gvn\/pb2nuVhrI+bOzcsghgUkqoRVgUXZPqrNmuojGvVvuo8z3YM7sKcu3yLZ2ZLk",
+          "power": "06S3knpegnEjitRLTNEK8zvOylFLDFSemxzf1gi9dTvM8ZCPREYbVNiwr\/MgFhgDzkNQxALyagm83VB6HmIFpf3KGE+8D71h97XG5H\/0Ytz5WMmTCtkQqGiUKgUsbyfipccOcFTMPofvDylkCKU54CsUGW9ItNkH2vCGDUm8g5MW1H6sp4h9uVoWKR4rRwyx"
+        },
+        "order": 999,
+        "frequency": 37900,
+        "brand": "72",
+        "device": 3,
+        "_id": "kk_3_72_4798",
+        "source": "kk",
+        "type": 1
+      },
+      {
+        "_id": "72_1252",
+        "key": {
+          "1001": "0002000B",
+          "1011": "030C1001",
+          "1013": "03080C0003080C0303080C0203080C01",
+          "1002": "0583380410DD",
+          "300": "8710,4340",
+          "1503": "T",
+          "301": "556,540",
+          "1004": "04008C013004009C01300400CC01300400BC01300400AC0130",
+          "1504": "S&0",
+          "306": "1",
+          "305": "97",
+          "1506": "1",
+          "888888": [],
+          "1505": "T|S&0,2,3",
+          "302": "540,1540"
+        },
+        "frequency": 38000,
+        "type": 2,
+        "source": "kk",
+        "brand": "72",
+        "order": 999,
+        "device": 3
+      },
+      {
+        "_id": "72_2302",
+        "key": {
+          "1001": "00020041",
+          "1013": "03020400030204030302040203020401",
+          "1002": "054908400800",
+          "300": "8890,4490",
+          "1015": "0300020103000200",
+          "1503": "T|S&1,2,3",
+          "1003": "020101",
+          "301": "536,586",
+          "1004": "040009010004000B0100040008010004000C010004000A0100",
+          "1504": "T|S&0",
+          "306": "1",
+          "305": "112",
+          "888888": [],
+          "1505": "T|S&0,2,3",
+          "302": "538,1720",
+          "1509": "-1&3"
+        },
+        "frequency": 38000,
+        "type": 2,
+        "source": "kk",
+        "brand": "72",
+        "order": 999,
+        "device": 3
+      },
+      {
+        "_id": "72_2497",
+        "key": {
+          "1001": "0004027D0382",
+          "1005": "0400E0011F0400A0015F040060019F04002001DF",
+          "1011": "0610140F181C01",
+          "1002": "06E01F758A1DE2",
+          "300": "5790,7380",
+          "1503": "T|S&1,2,3",
+          "301": "511,1380",
+          "1004": "0402F5030A0402F3030C0402F703080402F4030B0402F60309",
+          "1504": "S&0",
+          "306": "1",
+          "305": "222",
+          "1506": "1",
+          "888888": [],
+          "303": "-1&7200,512",
+          "1505": "T|S&0,2,3",
+          "302": "512,3430"
+        },
+        "frequency": 38000,
+        "type": 2,
+        "source": "kk",
+        "brand": "72",
+        "order": 999,
+        "device": 3
+      },
+      {
+        "_id": "kk_3_72_5385",
+        "key": {
+          "1001": "00020101",
+          "1005": "0203000203400203800203C0",
+          "1002": "07BB812000800021",
+          "1502": "NA",
+          "300": "8800,5300",
+          "1008": "050100060645",
+          "1003": "020101",
+          "1007": "020480020400",
+          "301": "530,1030",
+          "1004": "02022000020200020260020240",
+          "306": "1",
+          "305": "1200",
+          "888888": [],
+          "302": "530,3120"
+        },
+        "frequency": 38000,
+        "type": 2,
+        "source": "kk",
+        "brand": "72",
+        "order": 999,
+        "device": 3
+      },
+      {
+        "_id": "72_2297",
+        "key": {
+          "1001": "00020080",
+          "1013": "03020400030204010302040203020403",
+          "1002": "0788001200602802",
+          "300": "8900,4340",
+          "1015": "0300020203000201",
+          "1503": "T|S&1,2,3",
+          "1003": "020501",
+          "301": "590,623",
+          "1004": "040088052004008B052004008C052004009A05200400990520",
+          "1504": "T|S&0",
+          "306": "1",
+          "305": "187",
+          "888888": [],
+          "1505": "T|S&0,2,3",
+          "302": "589,2520",
+          "1509": "-1&4"
+        },
+        "frequency": 38000,
+        "type": 2,
+        "source": "kk",
+        "brand": "72",
+        "order": 999,
+        "device": 3
+      },
+      {
+        "_id": "kk_3_72_3327",
+        "key": {
+          "1001": "0002020E",
+          "1518": "if(exts~=nil) then\nbytes[2]=(~bytes[1]);\nbytes[4]=(~bytes[3]);\nbytes[6]=(~bytes[5]);\na=exts[8];\nif (a~=nil and a>0) then\nbytes[1]=(bytes[1]&0x1F)+0x40;\nend\nb=exts[18];\nif (b~=nil and b>0) then\nbytes[1]=(bytes[1]&0x1F)+0x60;\nend\nbytes[2]=(~bytes[1]);\nbytes[4]=(~bytes[3]);\nbytes[6]=(~bytes[5]);\nif(power==1) then\non=exts[9]; \nif((on~=nil)and(on>0) and (on<=1440))then\n\nbytes1={};\nbytes1[7]=(bytes[1]&0xFC)+ 0x01;\nbytes1[8]=(~bytes1[7]);\nbytes1[9]=bytes[3];\nbytes1[10]=bytes[4];\nbytes1[11]=bytes[5];\nbytes1[12]=bytes[6];\nbytes1[2]=(on&0xFF);\nbytes1[1]=(~bytes1[2]);\nbytes1[4]=((on&0xF00)>>8);\nbytes1[3]=(~bytes1[4]);\nbytes1[5]=0xFF;\nbytes1[6]=0;\nbytes=bytes1;\nreturn;\nend\nelseif (power==0) then\ns=exts[22];\nif (s~=nil and s>0) then\nbytes1={};\nbytes1[7]=(bytes[1]&0xFC)+ 0x02;\nbytes1[8]=(~bytes1[7]);\nbytes1[9]=bytes[3];\nbytes1[10]=bytes[4];\nbytes1[11]=bytes[5];\nbytes1[12]=bytes[6];\nif (s==1) then\nbytes1[1]=0xFF;\nbytes1[2]=0;\nbytes1[3]=0x3F;\nbytes1[4]=0xC0;\nbytes1[5]=0xFC;\nbytes1[6]=0x03;\nelseif (s==2) then\nbytes1[1]=0xFF;\nbytes1[2]=0;\nbytes1[3]=0x7F;\nbytes1[4]=0x80;\nbytes1[5]=0xF8;\nbytes1[6]=0x07;\nelseif (s==3) then\nbytes1[1]=0xFF;\nbytes1[2]=0;\nbytes1[3]=0xBF;\nbytes1[4]=0x40;\nbytes1[5]=0xF4;\nbytes1[6]=0x0B;\nelseif (s==4) then\nbytes1[1]=0xFF;\nbytes1[2]=0;\nbytes1[3]=0x3F;\nbytes1[4]=0xC0;\nbytes1[5]=0xED;\nbytes1[6]=0x12;\nelseif (s==5) then\nbytes1[1]=0xFF;\nbytes1[2]=0;\nbytes1[3]=0xBF;\nbytes1[4]=0x40;\nbytes1[5]=0xE5;\nbytes1[6]=0x1A;\nelseif (s==6) then\nbytes1[1]=0xFF;\nbytes1[2]=0;\nbytes1[3]=0x7F;\nbytes1[4]=0x80;\nbytes1[5]=0xDA;\nbytes1[6]=0x25;\nend\nbytes=bytes1;\nreturn;\nend\nend\nend\nbytes[2]=(~bytes[1]);\nbytes[4]=(~bytes[3]);\nbytes[6]=(~bytes[5]);",
+          "1011": "0310140F",
+          "1013": "03000307030003040300030503000306",
+          "1002": "06F70806F92AD5",
+          "1502": "T&16,17",
+          "300": "5880,7200",
+          "1501": "T&16,17",
+          "1015": "030308170303080F0303081F",
+          "1515": "8|0-1|0|CHAFD@22|0-6|0|CHAFD@18|0-1|0|CHAF@9|0-1430,10|1|CHAFD",
+          "1503": "T&16,17",
+          "1511": "bytes[1]=(byte)(~bytes[0]);bytes[3]=(byte)(~bytes[2]);bytes[5]=(byte)(~bytes[4]);",
+          "1522": "if(exts~=nil) then\nbytes[2]=bit32.bnot(bytes[1]);\nbytes[4]=bit32.bnot(bytes[3]);\nbytes[6]=bit32.bnot(bytes[5]);\na=exts[8];\nif (a~=nil and a>0) then\nbytes[1]=bit32.band(bytes[1],0x1F)+0x40;\nend\nb=exts[18];\nif (b~=nil and b>0) then\nbytes[1]=bit32.band(bytes[1],0x1F)+0x60;\nend\nbytes[2]=bit32.bnot(bytes[1]);\nbytes[4]=bit32.bnot(bytes[3]);\nbytes[6]=bit32.bnot(bytes[5]);\nif(power==1) then\non=exts[9]; \nif((on~=nil)and(on>0) and (on<=1440))then\n\nbytes1={};\nbytes1[7]=bit32.band(bytes[1],0xFC)+ 0x01;\nbytes1[8]=bit32.bnot(bytes1[7]);\nbytes1[9]=bytes[3];\nbytes1[10]=bytes[4];\nbytes1[11]=bytes[5];\nbytes1[12]=bytes[6];\nbytes1[2]=bit32.band(on,0xFF);\nbytes1[1]=bit32.bnot(bytes1[2]);\nbytes1[4]=bit32.rshift(bit32.band(on,0xF00),8);\nbytes1[3]=bit32.bnot(bytes1[4]);\nbytes1[5]=0xFF;\nbytes1[6]=0;\nbytes=bytes1;\nreturn;\nend\nelseif (power==0) then\ns=exts[22];\nif (s~=nil and s>0) then\nbytes1={};\nbytes1[7]=bit32.band(bytes[1],0xFC)+ 0x02;\nbytes1[8]=bit32.bnot(bytes1[7]);\nbytes1[9]=bytes[3];\nbytes1[10]=bytes[4];\nbytes1[11]=bytes[5];\nbytes1[12]=bytes[6];\nif (s==1) then\nbytes1[1]=0xFF;\nbytes1[2]=0;\nbytes1[3]=0x3F;\nbytes1[4]=0xC0;\nbytes1[5]=0xFC;\nbytes1[6]=0x03;\nelseif (s==2) then\nbytes1[1]=0xFF;\nbytes1[2]=0;\nbytes1[3]=0x7F;\nbytes1[4]=0x80;\nbytes1[5]=0xF8;\nbytes1[6]=0x07;\nelseif (s==3) then\nbytes1[1]=0xFF;\nbytes1[2]=0;\nbytes1[3]=0xBF;\nbytes1[4]=0x40;\nbytes1[5]=0xF4;\nbytes1[6]=0x0B;\nelseif (s==4) then\nbytes1[1]=0xFF;\nbytes1[2]=0;\nbytes1[3]=0x3F;\nbytes1[4]=0xC0;\nbytes1[5]=0xED;\nbytes1[6]=0x12;\nelseif (s==5) then\nbytes1[1]=0xFF;\nbytes1[2]=0;\nbytes1[3]=0xBF;\nbytes1[4]=0x40;\nbytes1[5]=0xE5;\nbytes1[6]=0x1A;\nelseif (s==6) then\nbytes1[1]=0xFF;\nbytes1[2]=0;\nbytes1[3]=0x7F;\nbytes1[4]=0x80;\nbytes1[5]=0xDA;\nbytes1[6]=0x25;\nend\nbytes=bytes1;\nreturn;\nend\nend\nend\nbytes[2]=bit32.bnot(bytes[1]);\nbytes[4]=bit32.bnot(bytes[3]);\nbytes[6]=bit32.bnot(bytes[5]);",
+          "301": "555,1400",
+          "1504": "T|S&0",
+          "306": "1",
+          "305": "222",
+          "1517": "18@8&1-1*0|8@18&1-1*0|18@5&0-3*0|8@5&0-3*0|5@8&1-1*0|5@18&1-1*0",
+          "1506": "0,1,2",
+          "1516": "9@10-1440,10&9|22@1-6&9",
+          "888888": [
+            {
+              "fname": "",
+              "fkey": "TURBO",
+              "fid": 8
+            },
+            {
+              "exts": {
+                "306": "1",
+                "305": "1025",
+                "1002": "0CF50AFF00FF00F50A6E912AD5",
+                "303": "-1&7200,555",
+                "302": "555,3340",
+                "301": "555,1400",
+                "300": "5880,7200"
+              },
+              "fname": "",
+              "fkey": "Timer On",
+              "fid": 9
+            },
+            {
+              "fname": "",
+              "fkey": "ECO",
+              "fid": 18
+            },
+            {
+              "fname": "",
+              "fkey": "sleep",
+              "fid": 22
+            }
+          ],
+          "1012": "0315180603151803031518070610140815180403151805",
+          "303": "-1&7200,513",
+          "1505": "T&16,17|S&0,2,3",
+          "302": "555,3340"
+        },
+        "frequency": 38000,
+        "type": 2,
+        "source": "kk",
+        "brand": "72",
+        "order": 999,
+        "device": 3
+      },
+      {
+        "_id": "kk_3_72_2292",
+        "key": {
+          "1001": "00020520",
+          "1518": "if(exts~=nil) then\nif(functionId==22) then\nsp=exts[22];\nif (sp~=nil and sp>0) then\nbytes[9]=(bytes[9]&0xF8)+1;\nend\nend\nif(power==1) then\ntiming_on=exts[9]; \nif((timing_on~=nil)and(timing_on>0) and (timing_on<=1440))then\nbytes[6]=0x34;\nbytes[9]=(bytes[9]|0x40);\nbytes[11]=math.floor(timing_on\/10);\nend\nelseif(power==0) then\ntiming_off=exts[10]; \nif((timing_off~=nil)and(timing_off>0) and (timing_off<=1440))then\nbytes[6]=0x2C;\nbytes[9]=(bytes[9]|0x40);\nbytes[10]=math.floor(timing_off\/10);\nend\nend\nend\nbytes[14]=0;\nfor i=1,13,1 do\nbytes[14]=bytes[14]+bytes[i];\nend",
+          "1011": "033C400F033C400E033C400D033C400C033C400B033C400A033C4009033C4008033C4007033C4006033C4005033C4005033C4004033C4003033C4001",
+          "1013": "03454800034548020345480303454805",
+          "1002": "0E23CB2601002403E7000000000023",
+          "300": "3200,1600",
+          "1008": "0401000D0D",
+          "1515": "9|60-1200,60|1|CH@10|60-1200,60|0|CH",
+          "1503": "NA",
+          "1522": "if(exts~=nil) then\nif(functionId==22) then\nsp=exts[22];\nif (sp~=nil and sp>0) then\nbytes[9]=bit32.band(bytes[9],0xF8)+1;\nend\nend\nif(power==1) then\ntiming_on=exts[9]; \nif((timing_on~=nil)and(timing_on>0) and (timing_on<=1440))then\nbytes[6]=0x34;\nbytes[9]=bit32.bor(bytes[9],0x40);\nbytes[11]=math.floor(timing_on\/10);\nend\nelseif(power==0) then\ntiming_off=exts[10]; \nif((timing_off~=nil)and(timing_off>0) and (timing_off<=1440))then\nbytes[6]=0x2C;\nbytes[9]=bit32.bor(bytes[9],0x40);\nbytes[10]=math.floor(timing_off\/10);\nend\nend\nend\nbytes[14]=0;\nfor i=1,13,1 do\nbytes[14]=bytes[14]+bytes[i];\nend",
+          "301": "450,420",
+          "1504": "NA",
+          "306": "1",
+          "305": "137",
+          "1506": "0",
+          "888888": [],
+          "1012": "0334380303343801000000",
+          "1505": "NA",
+          "302": "450,1300"
+        },
+        "frequency": 38000,
+        "type": 2,
+        "source": "kk",
+        "brand": "72",
+        "order": 999,
+        "device": 3
+      },
+      {
+        "_id": "72_2407",
+        "key": {
+          "1001": "0002000B",
+          "1011": "030C1001",
+          "1013": "03080C0303080C0403080C0303080C02",
+          "1016": "040204080C040604080C040704080C",
+          "1002": "0583390410DD",
+          "1502": "T&29,30",
+          "300": "8930,4630",
+          "1501": "T&29,30",
+          "1503": "T|S&1,2,3",
+          "301": "582,531",
+          "1504": "T|S&0",
+          "306": "1",
+          "305": "162",
+          "1506": "1",
+          "888888": [],
+          "1012": "060004080C1001060004090C10010600040C0C10010600040B0C10010600040A0C1001",
+          "1505": "T|S&0,2,3",
+          "302": "582,1640"
+        },
+        "frequency": 38690,
+        "type": 2,
+        "source": "kk",
+        "brand": "72",
+        "order": 999,
+        "device": 3
+      },
+      {
+        "_id": "kk_3_72_5189",
+        "key": {
+          "1001": "00080202030206020702",
+          "1514": "6&&2C000C0ED8010103010020002000200060010004008600860012050300860086050700860086050B0086008600808030308080303080803030|7&&3E000C0ED80101021800200020002000600101040086008600240D030086008600200218008600860D07008600860020021800860086070B00860086002000020230300202303002023030|7&&2400040ED802000000002100210021006201010400820082000A09FF00820082002102070002023030",
+          "1518": "if (functionId==1)then\nbytes[3]=0x02;\nbytes[4]=0x02;\nbytes[7]=0x02;\nbytes[8]=0x02;\nend\nif (udWindMode==1) then\nbytes[9]=0x00;\nbytes[10]=0x00;\nbytes[13]=0x00;\nbytes[14]=0x00;\nend",
+          "1011": "0C0408010C10012428012C3001",
+          "1013": "0C000402080C02202402282C020C000402080C02202402282C020C000404080C04202404282C040C000406080C06202406282C06",
+          "1002": "1021210A0A21210A0A0404363604043636",
+          "300": "3500,3500",
+          "1503": "T",
+          "1511": "if(functionId==1) {bytes[2]=(byte)0x02;bytes[3]=(byte)0x02;bytes[6]=(byte)0x02;bytes[7]=(byte)0x02;} if (udWindMode==1 ){bytes[8]=(byte)0x00;bytes[9]=(byte)0x00;bytes[12]=(byte)0x00;bytes[13]=(byte)0x00;}",
+          "301": "850,850",
+          "1510": "6&&3477,3477,886,886,886,886,886,886,886,886,886,886,886,886,886,886,886,2632,886,886,886,886,886,886,886,886,886,886,886,886,886,886,886,2632,886,886,886,886,886,886,886,886,886,2632,886,2632,886,886,886,886,886,886,886,886,886,886,886,886,886,2632,886,2632,886,886,886,886,3477,3477,886,886,886,886,886,886,886,886,886,886,886,886,886,886,886,2632,886,886,886,886,886,886,886,886,886,886,886,886,886,886,886,2632,886,886,886,886,886,886,886,886,886,2632,886,2632,886,886,886,886,886,886,886,886,886,886,886,886,886,2632,886,2632,886,886,886,886,3477,3477,886,886,886,886,886,886,886,886,886,886,886,886,886,886,886,2632,886,886,886,886,886,886,886,886,886,886,886,886,886,886,886,2632,886,886,886,886,886,886,886,886,886,2632,886,2632,886,886,886,886,886,886,886,886,886,886,886,886,886,2632,886,2632,886,886,886,886,3477,3477,886,1000|7&&3477,3477,886,886,886,2632,886,886,886,886,886,886,886,886,886,886,886,886,886,886,886,2632,886,886,886,886,886,886,886,886,886,886,886,886,886,886,886,886,886,886,886,886,886,2632,886,2632,886,886,886,886,886,886,886,886,886,886,886,886,886,2632,886,2632,886,886,886,886,3477,3477,886,13944,3477,3477,886,886,886,2632,886,886,886,886,886,886,886,886,886,886,886,886,886,886,886,2632,886,886,886,886,886,886,886,886,886,886,886,886,886,886,886,886,886,886,886,886,886,2632,886,2632,886,886,886,886,886,886,886,886,886,886,886,886,886,2632,886,2632,886,886,886,886,3477,3477,886,13944,3477,3477,886,886,886,2632,886,886,886,886,886,886,886,886,886,886,886,886,886,886,886,2632,886,886,886,886,886,886,886,886,886,886,886,886,886,886,886,886,886,886,886,886,886,2632,886,2632,886,886,886,886,886,886,886,886,886,886,886,886,886,2632,886,2632,886,886,886,886,3477,3477,886,13944|7&&3421,3421,868,868,868,2578,868,868,868,868,868,868,868,868,868,868,868,868,868,868,868,2578,868,868,868,868,868,868,868,868,868,868,868,868,868,868,868,868,868,868,868,868,868,2578,868,2578,868,868,868,868,868,868,868,868,868,868,868,868,868,2578,868,2578,868,868,868,868,3421,3421,868,13657,3421,3421,868,868,868,2578,868,868,868,868,868,868,868,868,868,868,868,868,868,868,868,2578,868,868,868,868,868,868,868,868,868,868,868,868,868,868,868,868,868,868,868,868,868,2578,868,2578,868,868,868,868,868,868,868,868,868,868,868,868,868,2578,868,2578,868,868,868,868,3421,3421,868,13657",
+          "1004": "08020A030A060A070A08020C030C060C070C08020E030E060E070E08020803080608070808020B030B060B070B",
+          "306": "1",
+          "305": "272",
+          "888888": [],
+          "303": "3&3500,3500|7&3500,3500,850,13990,3500,3500|11&3500,3500|15&3500,3500",
+          "302": "850,2500"
+        },
+        "frequency": 38000,
+        "type": 2,
+        "source": "kk",
+        "brand": "72",
+        "order": 999,
+        "device": 3
+      },
+      {
+        "_id": "kk_3_72_5138",
+        "key": {
+          "1001": "00020200",
+          "1013": "03000400030004010300040203000403",
+          "1002": "06002602000000",
+          "300": "3000,3000",
+          "1015": "031014000310140103101402031014030310140403101405",
+          "1503": "NA",
+          "1508": "2",
+          "1003": "020116020117020118020119020120020121020122020123020124020125020126020127020128020129020130",
+          "301": "500,500",
+          "1504": "T|S&0",
+          "305": "1355",
+          "1506": "0,1,2,3,4,5",
+          "888888": [],
+          "1012": "0304080003040802000304080503040801",
+          "303": "-1&60000",
+          "1505": "T|S&1,2,3",
+          "302": "500,1500",
+          "1509": "-1&4"
+        },
+        "frequency": 38000,
+        "type": 2,
+        "source": "kk",
+        "brand": "72",
+        "order": 999,
+        "device": 3
+      }
+    ]
+  },
+  "encoding": "UTF-8",
+  "language": "ZH_CN"
+}
