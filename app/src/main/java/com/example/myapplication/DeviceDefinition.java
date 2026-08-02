@@ -17,6 +17,8 @@ public final class DeviceDefinition {
     private final String assetDirectory;
     /** 是否允许长按连续发送。 */
     private final boolean longPressEnabled;
+    /** 进入品牌页面后需要展示的资源关系错误。 */
+    private final String childLoadError;
 
     /**
      * 创建一个设备类型。
@@ -26,14 +28,17 @@ public final class DeviceDefinition {
      * @param indexAssetName 品牌索引文件名
      * @param assetDirectory 品牌与型号资源目录
      * @param longPressEnabled 是否允许长按连续发送
+     * @param childLoadError 下一级资源错误；没有错误时为 null
      */
     public DeviceDefinition(int deviceId, String name, String indexAssetName,
-                            String assetDirectory, boolean longPressEnabled) {
+                            String assetDirectory, boolean longPressEnabled,
+                            String childLoadError) {
         this.deviceId = deviceId;
         this.name = name;
         this.indexAssetName = indexAssetName;
         this.assetDirectory = assetDirectory;
         this.longPressEnabled = longPressEnabled;
+        this.childLoadError = childLoadError;
     }
 
     public int getDeviceId() { return deviceId; }
@@ -41,4 +46,5 @@ public final class DeviceDefinition {
     public String getIndexAssetName() { return indexAssetName; }
     public String getAssetDirectory() { return assetDirectory; }
     public boolean isLongPressEnabled() { return longPressEnabled; }
+    public String getChildLoadError() { return childLoadError; }
 }

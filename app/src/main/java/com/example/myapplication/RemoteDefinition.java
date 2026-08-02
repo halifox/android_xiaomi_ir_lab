@@ -21,6 +21,8 @@ public final class RemoteDefinition {
     private final List<RemoteCommand> commands;
     /** 型号级别的不可用原因。 */
     private final String unavailableReason;
+    /** type=2 KK 空调的状态能力，其他型号为 null。 */
+    private final AcConfiguration acConfiguration;
 
     /**
      * 创建完整遥控器定义。
@@ -33,13 +35,15 @@ public final class RemoteDefinition {
      * @param unavailableReason 型号不可用原因
      */
     public RemoteDefinition(int deviceId, String modelId, String source, int frequency,
-                            List<RemoteCommand> commands, String unavailableReason) {
+                            List<RemoteCommand> commands, String unavailableReason,
+                            AcConfiguration acConfiguration) {
         this.deviceId = deviceId;
         this.modelId = modelId;
         this.source = source;
         this.frequency = frequency;
         this.commands = List.copyOf(commands);
         this.unavailableReason = unavailableReason;
+        this.acConfiguration = acConfiguration;
     }
 
     public int getDeviceId() { return deviceId; }
@@ -48,5 +52,6 @@ public final class RemoteDefinition {
     public int getFrequency() { return frequency; }
     public List<RemoteCommand> getCommands() { return commands; }
     public String getUnavailableReason() { return unavailableReason; }
+    public AcConfiguration getAcConfiguration() { return acConfiguration; }
     public boolean isSendable() { return unavailableReason == null && frequency > 0; }
 }

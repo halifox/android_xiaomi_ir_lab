@@ -17,6 +17,8 @@ public final class RemoteSummary {
     private final int frequency;
     /** 型号文件内的原始控制字段数量。 */
     private final int commandCount;
+    /** 原始型号类型；KK 空调使用 1 或 2。 */
+    private final int modelType;
     /** 当前实现是否允许发射该型号。 */
     private final boolean sendable;
     /** 不可发射时用于界面展示的原因。 */
@@ -34,12 +36,14 @@ public final class RemoteSummary {
      * @param unavailableReason 不可发射原因
      */
     public RemoteSummary(String modelId, String source, int order, int frequency,
-                         int commandCount, boolean sendable, String unavailableReason) {
+                         int commandCount, int modelType, boolean sendable,
+                         String unavailableReason) {
         this.modelId = modelId;
         this.source = source;
         this.order = order;
         this.frequency = frequency;
         this.commandCount = commandCount;
+        this.modelType = modelType;
         this.sendable = sendable;
         this.unavailableReason = unavailableReason;
     }
@@ -49,6 +53,7 @@ public final class RemoteSummary {
     public int getOrder() { return order; }
     public int getFrequency() { return frequency; }
     public int getCommandCount() { return commandCount; }
+    public int getModelType() { return modelType; }
     public boolean isSendable() { return sendable; }
     public String getUnavailableReason() { return unavailableReason; }
 }

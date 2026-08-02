@@ -17,6 +17,8 @@ public final class BrandDefinition {
     private final int priority;
     /** 品牌详细数据文件的 assets 路径。 */
     private final String assetPath;
+    /** 进入型号页面后需要展示的品牌资源错误。 */
+    private final String childLoadError;
 
     /**
      * 创建一个品牌定义。
@@ -26,14 +28,16 @@ public final class BrandDefinition {
      * @param name 品牌名称
      * @param priority 原始索引优先级
      * @param assetPath 品牌文件路径
+     * @param childLoadError 下一级资源错误；没有错误时为 null
      */
     public BrandDefinition(int deviceId, int brandId, String name, int priority,
-                           String assetPath) {
+                           String assetPath, String childLoadError) {
         this.deviceId = deviceId;
         this.brandId = brandId;
         this.name = name;
         this.priority = priority;
         this.assetPath = assetPath;
+        this.childLoadError = childLoadError;
     }
 
     public int getDeviceId() { return deviceId; }
@@ -41,5 +45,6 @@ public final class BrandDefinition {
     public String getName() { return name; }
     public int getPriority() { return priority; }
     public String getAssetPath() { return assetPath; }
+    public String getChildLoadError() { return childLoadError; }
     public String getStableId() { return deviceId + ":" + brandId; }
 }

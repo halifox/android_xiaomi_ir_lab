@@ -23,8 +23,8 @@ import java.util.Map;
 /**
  * 按“设备类型→品牌→遥控器型号”关系读取 assets 码库。
  *
- * <p>每一级只能使用上一级 JSON 中的显式 ID。目录扫描仅用于把已知 ID 解析成唯一文件名，
- * 不会把未被索引引用的文件加入界面。解析结果按页面粒度缓存，避免启动时读取全部码库。</p>
+ * <p>每一级只能使用上一级 JSON 中的显式 ID。当前页面只读取当前级索引，下一级资源
+ * 是否完整会延迟到用户进入下一级页面后检查，避免一个损坏资源隐藏同级其他条目。</p>
  */
 public final class RemoteCatalog {
     /** Gson 数据绑定实例。 */
@@ -61,10 +61,13 @@ public final class RemoteCatalog {
         List<DeviceDefinition> result = new ArrayList<>();
         for (DeviceDto dto : response.data) {
             String prefix = dto.deviceId + "_";
-            String index = uniqueIndex(rootEntries, prefix);
+            List<String> matches = matchingIndexes(rootEntries, prefix);
+            String index = matches.size() == 1 ? matches.get(0) : prefix + "missing.json";
             String directory = index.substring(0, index.length() - ".json".length());
+            String error = matches.size() == 1 ? null
+                    : prefix + " 应唯一对应一个设备索引，实际为 " + matches;
             result.add(new DeviceDefinition(dto.deviceId, localizedName(dto.language, "设备 " + dto.deviceId),
-                    index, directory, dto.longPressedMatch != 0));
+                    index, directory, dto.longPressedMatch != 0, error));
         }
         deviceCache = List.copyOf(result);
         return deviceCache;
@@ -78,6 +81,7 @@ public final class RemoteCatalog {
      * @throws IOException 品牌索引或品牌文件关系不完整
      */
     public synchronized List<BrandDefinition> loadBrands(DeviceDefinition device) throws IOException {
+        if (device.getChildLoadError() != null) throw new IOException(device.getChildLoadError());
         List<BrandDefinition> cached = brandCache.get(device.getDeviceId());
         if (cached != null) return cached;
         JsonElement data = readObject(device.getIndexAssetName()).get("data");
@@ -92,10 +96,13 @@ public final class RemoteCatalog {
             BrandDto dto = GSON.fromJson(element, BrandDto.class);
             if (unique.containsKey(dto.brandId)) continue;
             String suffix = "_" + dto.brandId + ".json";
-            String file = uniqueSuffix(files, suffix);
+            List<String> matches = matchingSuffixes(files, suffix);
+            String file = matches.size() == 1 ? matches.get(0) : "missing" + suffix;
+            String error = matches.size() == 1 ? null
+                    : "品牌后缀 " + suffix + " 应唯一对应一个文件，实际为 " + matches;
             unique.put(dto.brandId, new BrandDefinition(dto.deviceId, dto.brandId,
                     blankFallback(dto.name, "品牌 " + dto.brandId), dto.priority,
-                    device.getAssetDirectory() + "/" + file));
+                    device.getAssetDirectory() + "/" + file, error));
         }
         List<BrandDefinition> result = List.copyOf(unique.values());
         brandCache.put(device.getDeviceId(), result);
@@ -112,6 +119,7 @@ public final class RemoteCatalog {
      */
     public synchronized List<RemoteSummary> loadRemotes(DeviceDefinition device, BrandDefinition brand)
             throws IOException {
+        if (brand.getChildLoadError() != null) throw new IOException(brand.getChildLoadError());
         List<RemoteSummary> cached = remoteCache.get(brand.getStableId());
         if (cached != null) return cached;
         JsonObject brandData = dataObject(readObject(brand.getAssetPath()), brand.getAssetPath());
@@ -141,14 +149,8 @@ public final class RemoteCatalog {
 
         List<RemoteSummary> result = new ArrayList<>();
         for (RemoteReference reference : references.values()) {
-            JsonObject model = loadModelObject(device, reference.modelId);
-            JsonObject key = objectOrNull(model.get("key"));
-            int frequency = integer(model, "frequency", 0);
-            int count = key == null ? 0 : key.size();
-            String source = string(model, "source", reference.source);
-            String reason = unavailableReason(device.getDeviceId(), source, frequency, count);
-            result.add(new RemoteSummary(reference.modelId, source, reference.order, frequency,
-                    count, reason == null, reason));
+            result.add(new RemoteSummary(reference.modelId, reference.source, reference.order,
+                    0, 0, 0, true, null));
         }
         List<RemoteSummary> immutable = List.copyOf(result);
         remoteCache.put(brand.getStableId(), immutable);
@@ -168,11 +170,16 @@ public final class RemoteCatalog {
         JsonObject key = objectOrNull(model.get("key"));
         String source = string(model, "source", summary.getSource());
         int frequency = integer(model, "frequency", summary.getFrequency());
-        String reason = unavailableReason(device.getDeviceId(), source, frequency, key == null ? 0 : key.size());
-        List<RemoteCommand> commands = device.getDeviceId() == 3 && "kk".equalsIgnoreCase(source)
-                ? acPreviewCommands(key) : fixedCommands(key, reason);
+        int modelType = integer(model, "type", summary.getModelType());
+        String reason = unavailableReason(device.getDeviceId(), source, modelType,
+                frequency, key == null ? 0 : key.size());
+        boolean statefulAc = device.getDeviceId() == 3 && "kk".equalsIgnoreCase(source)
+                && modelType == 2;
+        AcConfiguration acConfiguration = statefulAc
+                ? AcConfiguration.parse(summary.getModelId(), key) : null;
+        List<RemoteCommand> commands = statefulAc ? List.of() : fixedCommands(key, reason);
         return new RemoteDefinition(device.getDeviceId(), summary.getModelId(), source,
-                frequency, commands, reason);
+                frequency, commands, reason, acConfiguration);
     }
 
     /** @return 固定码 JSON 对象转换出的正反码控制项。 */
@@ -203,34 +210,14 @@ public final class RemoteCatalog {
         return result;
     }
 
-    /** @return 从 KK 空调配置生成仅供浏览的语义控制项。 */
-    private static List<RemoteCommand> acPreviewCommands(JsonObject key) {
-        List<RemoteCommand> result = new ArrayList<>();
-        String reason = "device=3 且 source=kk，当前按要求不发送";
-        result.add(disabled("power", "电源", reason));
-        result.add(disabled("mode", "运行模式", reason));
-        result.add(disabled("temperature", "目标温度", reason));
-        result.add(disabled("fan_speed", "风速", reason));
-        if (key != null && key.has("1506")) result.add(disabled("wind", "上下风向", reason));
-        JsonArray extras = key == null ? null : arrayOrNull(key.get("888888"));
-        if (extras != null) for (JsonElement element : extras) {
-            JsonObject extra = element.getAsJsonObject();
-            int id = integer(extra, "fid", -1);
-            String title = string(extra, "fname", "");
-            if (title.isBlank()) title = string(extra, "fkey", "功能 " + id);
-            result.add(disabled("function_" + id, title, reason));
-        }
-        return result;
-    }
-
-    /** @return 创建一项不可发送的界面控制。 */
-    private static RemoteCommand disabled(String key, String title, String reason) {
-        return new RemoteCommand(key, title, reason, null, null, false);
-    }
-
     /** @return 根据明确范围规则计算型号不可用原因。 */
-    private static String unavailableReason(int deviceId, String source, int frequency, int count) {
-        if (deviceId == 3 && "kk".equalsIgnoreCase(source)) return "KK 空调状态编码按要求未实现";
+    private static String unavailableReason(int deviceId, String source, int modelType,
+                                            int frequency, int count) {
+        if (deviceId == 3 && "kk".equalsIgnoreCase(source) && modelType == 2) {
+            if (frequency <= 0) return "型号缺少有效载波频率";
+            if (count == 0) return "型号文件没有控制项";
+            return null;
+        }
         if (count == 0) return "型号文件没有控制项";
         if (frequency <= 0) return "型号缺少有效载波频率";
         return null;
@@ -285,26 +272,19 @@ public final class RemoteCatalog {
      * <p>空品牌设备的同名目录不会被 Android assets 打包，因此设备资源目录由索引文件名
      * 推导，不能要求根目录列表中一定存在空目录。</p>
      */
-    private static String uniqueIndex(String[] entries, String prefix) throws IOException {
+    private static List<String> matchingIndexes(String[] entries, String prefix) {
         List<String> matches = new ArrayList<>();
         for (String entry : entries) {
             if (entry.startsWith(prefix) && entry.endsWith(".json")) matches.add(entry);
         }
-        if (matches.size() != 1) {
-            throw new IOException(prefix + " 应唯一对应一个设备索引，实际为 " + matches);
-        }
-        return matches.get(0);
+        return matches;
     }
 
-    /** @return 根据品牌 ID 文件名后缀解析唯一品牌文件。 */
-    private static String uniqueSuffix(String[] entries, String suffix) throws IOException {
-        String match = null;
-        for (String entry : entries) if (entry.endsWith(suffix)) {
-            if (match != null) throw new IOException("品牌后缀 " + suffix + " 对应多个文件");
-            match = entry;
-        }
-        if (match == null) throw new IOException("找不到品牌文件 " + suffix);
-        return match;
+    /** @return 根据品牌 ID 文件名后缀查找全部候选品牌文件。 */
+    private static List<String> matchingSuffixes(String[] entries, String suffix) {
+        List<String> matches = new ArrayList<>();
+        for (String entry : entries) if (entry.endsWith(suffix)) matches.add(entry);
+        return matches;
     }
 
     /** @return 优先选择简体中文的本地化名称。 */
